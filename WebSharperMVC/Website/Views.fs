@@ -87,3 +87,15 @@ module Views =
                     ]
                 ]
             ]
+
+    let custom404 =
+        withMainTemplate "Error - Page Not Found" "" <| fun ctx ->
+            [
+                Shared.navigation
+                Div [Class "container"] -< [
+                    Div [Class "pull-down"] -< [
+                        H2 [Text "Page Not Found"]
+                        P [Text "The requested URL doesn't exist."]
+                    ]
+                ]
+            ]

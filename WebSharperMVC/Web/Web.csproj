@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="*.aspx" />
+    <Content Include="robots.txt" />
     <Content Include="Scripts\*.js" />
     <Content Include="Content\**\*.*" />
     <Content Include="StyleSheets\StyleSheet1.css" />
@@ -71,9 +72,7 @@
       <Name>Website</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Properties\PublishProfiles\WebSharperMVCFileSystem.pubxml" />
   </ItemGroup>
