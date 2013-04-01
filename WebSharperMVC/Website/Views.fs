@@ -15,32 +15,38 @@ module Views =
     let home =
         withMainTemplate Home.title Home.metaDescription <| fun ctx ->
             [
-                Home.navigation
-                Div [new Forkme.Control()]
-                Div [Class "container"] -< [
-                    loginInfo' ctx
-                    Div [Class "pull-down"] -< [
-                        Home.header
-                        UL [Class "unstyled"] -< [
-                            LI ["Sub 1" => (ctx.Link <| Sub 1)]
-                            LI ["Sub 2" => (ctx.Link <| Sub 2)]
-                            LI ["Sub 3" => (ctx.Link <| Sub 3)]
+                Div [Class "wrap"] -< [
+                    Home.navigation
+                    Div [new Forkme.Control()]
+                    Div [Class "container"] -< [
+                        loginInfo' ctx
+                        Div [Class "pull-down"] -< [
+                            Home.header
+                            UL [Class "unstyled"] -< [
+                                LI ["Sub 1" => (ctx.Link <| Sub 1)]
+                                LI ["Sub 2" => (ctx.Link <| Sub 2)]
+                                LI ["Sub 3" => (ctx.Link <| Sub 3)]
+                            ]
                         ]
                     ]
                 ]
+                Shared.footer
             ]
 
     let about =
         withMainTemplate About.title About.metaDescription <| fun ctx ->
             [
-                About.navigation
-                Div [new Forkme.Control()]
-                Div [Class "container"] -< [
-                    loginInfo' ctx
-                    Div [Class "pull-down"] -< [
-                        About.header
+                Div [Class "wrap"] -< [
+                    About.navigation
+                    Div [new Forkme.Control()]
+                    Div [Class "container"] -< [
+                        loginInfo' ctx
+                        Div [Class "pull-down"] -< [
+                            About.header
+                        ]
                     ]
                 ]
+                Shared.footer
             ]
 
     let sub pageId =
@@ -49,14 +55,17 @@ module Views =
         let metaDescription = "Sub meta description " + pageId' + "."
         withMainTemplate title metaDescription <| fun ctx ->
             [
-                Shared.navigation
-                Div [new Forkme.Control()]
-                Div [Class "container"] -< [
-                    loginInfo' ctx
-                    Div [Class "pull-down"] -< [
-                        Div [Text <| "Sub page " + pageId']
+                Div [Class "wrap"] -< [
+                    Shared.navigation
+                    Div [new Forkme.Control()]
+                    Div [Class "container"] -< [
+                        loginInfo' ctx
+                        Div [Class "pull-down"] -< [
+                            Div [Text <| "Sub page " + pageId']
+                        ]
                     ]
                 ]
+                Shared.footer
             ]
 
     let login (redirectAction: Action option) =
@@ -67,35 +76,44 @@ module Views =
                 | None        -> Action.Admin
                 |> ctx.Link
             [
-                Div [Class "container"] -< [
-                    Shared.navigation
-                    Div [Class "pull-down"] -< [
-                        H1 [Text "Login"]
-                        Div [new Login.Client.Control(redirectLink)]
+                Div [Class "wrap"] -< [
+                    Div [Class "container"] -< [
+                        Shared.navigation
+                        Div [Class "pull-down"] -< [
+                            H1 [Text "Login"]
+                            Div [new Login.Client.Control(redirectLink)]
+                        ]
                     ]
                 ]
+                Shared.footer
             ]
 
     let admin =
         withMainTemplate "Admin" "" <| fun ctx ->
             [
-                Shared.navigation
-                Div [Class "container"] -< [
-                    loginInfo' ctx
-                    Div [Class "pull-down"] -< [
-                        H1 [Text "Admin page"]
+                Div [Class "wrap"] -< [
+                    Shared.navigation
+                    Div [Class "container"] -< [
+                        loginInfo' ctx
+                        Div [Class "pull-down"] -< [
+                            H1 [Text "Admin page"]
+                        ]
                     ]
                 ]
+                Shared.footer
             ]
 
     let custom404 =
         withMainTemplate "Error - Page Not Found" "" <| fun ctx ->
             [
-                Shared.navigation
-                Div [Class "container"] -< [
-                    Div [Class "pull-down"] -< [
-                        H2 [Text "Page Not Found"]
-                        P [Text "The requested URL doesn't exist."]
+                Div [Class "wrap"] -< [
+                    Shared.navigation
+                    Div [Class "container"] -< [
+                        Div [Class "pull-down"] -< [
+                            H2 [Text "Page Not Found"]
+                            P [Text "The requested URL doesn't exist."]
+                        ]
                     ]
                 ]
+                Shared.footer
             ]

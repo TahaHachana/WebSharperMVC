@@ -4,12 +4,20 @@ module Content =
 
     open IntelliFactory.WebSharper
     open IntelliFactory.Html
-    open IntelliFactory.WebSharper.Sitelets
+    open IntelliFactory.WebSharper.Sitelets.Content
     open Utils.Server
 
     module Shared =
         
-        let navigation : Content.HtmlElement = nav None
+        let navigation : HtmlElement = nav None
+        let footer : HtmlElement =
+            HTML5.Footer [Id "footer"] -< [
+                Div [Class "container"; Style "padding-top: 20px;"] -< [
+                    P [Text "Powered by "] -< [
+                        A ["WebSharper" => "http://www.websharper.com/"]
+                    ]
+                ]            
+            ]
 
     module Home =
     
@@ -17,9 +25,9 @@ module Content =
 
         let metaDescription = "Home meta description."
 
-        let navigation : Content.HtmlElement = nav <| Some "Home"
+        let navigation : HtmlElement = nav <| Some "Home"
 
-        let header : Content.HtmlElement =
+        let header : HtmlElement =
             header
                 "Home page header"
                 "Short home page description"
@@ -30,9 +38,9 @@ module Content =
 
         let metaDescription = "About meta description."
 
-        let navigation : Content.HtmlElement = nav <| Some "About"
+        let navigation : HtmlElement = nav <| Some "About"
 
-        let header : Content.HtmlElement =
+        let header : HtmlElement =
             header
                 "About page header"
                 "Short about page description"
