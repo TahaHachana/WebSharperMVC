@@ -44,6 +44,7 @@
     <Compile Include="Controller.fs" />
     <Compile Include="Site.fs" />
     <None Include="packages.config" />
+    <None Include="WebSharper.targets" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ExtSharper">
