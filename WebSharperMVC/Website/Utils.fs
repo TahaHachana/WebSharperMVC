@@ -15,7 +15,7 @@ module Utils =
 
         let li activeLiOption href txt =
             match activeLiOption with
-                | None -> LI [A [HRef href] -< [Text txt]]
+                | None          -> LI [A [HRef href] -< [Text txt]]
                 | Some activeLi ->
                     if txt = activeLi then
                         LI [Class "active"] -< [A [HRef href] -< [Text txt]]

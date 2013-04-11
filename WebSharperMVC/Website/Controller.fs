@@ -6,8 +6,7 @@ module Controller =
     open Model
 
     let protect view =
-        let user = UserSession.GetLoggedInUser()
-        match user with
+        match UserSession.GetLoggedInUser() with
             | None    -> Content.Redirect <| Login None
             | _       -> view
 
