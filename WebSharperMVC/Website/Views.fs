@@ -80,8 +80,7 @@ module Views =
                     Div [Class "container"] -< [
                         Shared.navigation
                         Div [Class "pull-down"] -< [
-                            H1 [Text "Login"]
-                            Div [new Login.Client.Control(redirectLink)]
+                            Div [new Login.Control(redirectLink)]
                         ]
                     ]
                 ]

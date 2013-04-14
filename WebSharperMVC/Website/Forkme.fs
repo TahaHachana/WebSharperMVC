@@ -6,7 +6,7 @@ module Forkme =
     open IntelliFactory.WebSharper.Html
 
     [<JavaScript>]
-    let main() =
+    let private main() =
         A [HRef "https://github.com/TahaHachana/WebSharperMVC"] -< [
             Img [
                 Src "https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"
