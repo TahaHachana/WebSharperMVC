@@ -2,7 +2,6 @@
 
 open IntelliFactory.Html
 open IntelliFactory.WebSharper.Sitelets
-open ExtSharper
 open Content
 open Model
 open Skin
