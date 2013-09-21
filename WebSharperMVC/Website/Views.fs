@@ -1,118 +1,139 @@
-﻿namespace Website
+﻿module Website.Views
 
-module Views =
+open IntelliFactory.Html
+open IntelliFactory.WebSharper.Sitelets
+open ExtSharper
+open Content
+open Model
+open Skin
+open Nav
 
-    open IntelliFactory.Html
-    open ExtSharper
-    open Content
-    open Model
-    open Utils.Server
+module private HomeUtils =
+    let jumbo =
+        Div [Class "jumbotron"] -< [
+            Div [Class "container text-center"] -< [
+                H1 [Text "Jumbotron"]
+                P [Text "Featured content or information."]
+                P [
+                    A [Class "btn btn-success btn-lg"] -< [Text "Learn more"]
+                ]
+            ]
+        ]
 
-    let mainTemplate = Skin.MakeDefaultTemplate "~/Main.html" Skin.LoadFrequency.PerRequest
-    let withMainTemplate = Skin.WithTemplate<Action> mainTemplate
-    let loginInfo' = loginInfo Logout Login
+    let colDiv (ctx:Context<_>) x =
+        Div [Class "col-lg-4"] -< [
+            H2 [Text "Heading"]
+            P [Text "Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui."]
+            P [
+                A [
+                    Class "btn btn-primary"
+                    HRef (ctx.Link <| Sub x)
+                ] -< [Text "View details »"]
+            ]
+        ]
 
-    let home =
-        withMainTemplate Home.title Home.metaDescription <| fun ctx ->
-            [
-                Div [Class "wrap"] -< [
-                    Home.navigation
-                    Div [new Forkme.Control()]
-                    Div [Class "container"] -< [
-                        loginInfo' ctx
-                        Div [Class "pull-down"] -< [
-                            Home.header
-                            UL [Class "unstyled"] -< [
-                                LI ["Sub 1" => (ctx.Link <| Sub 1)]
-                                LI ["Sub 2" => (ctx.Link <| Sub 2)]
-                                LI ["Sub 3" => (ctx.Link <| Sub 3)]
-                            ]
-                        ]
+    let body ctx =
+        Div [Id "wrap"] -< [
+            nav (Some "Home") ctx
+            Div [Class "container"; Id "main"] -< [
+                jumbo
+                HR []
+                Div [Class "row"] -< [
+                    colDiv ctx 1
+                    colDiv ctx 2
+                    colDiv ctx 3
+                ]
+            ]
+            Div [Id "push"]
+        ]
+
+let home =
+    withTemplate
+        Templates.home
+        "Home Title"
+        "Home Meta Description"
+        (fun ctx -> HomeUtils.body ctx)
+
+let about =
+    withTemplate<Action>
+        Templates.home
+        "About Title"
+        "About Meta Description"
+        (fun ctx ->
+            Div [Id "wrap"] -< [
+                nav (Some "About") ctx
+                Div [Class "container"; Id "main"] -< [
+                    Div [Class "page-header"] -< [
+                        H1 [Text "About"]
                     ]
                 ]
-                Shared.footer
-            ]
+                Div [Id "push"]
+            ])
 
-    let about =
-        withMainTemplate About.title About.metaDescription <| fun ctx ->
-            [
-                Div [Class "wrap"] -< [
-                    About.navigation
-                    Div [new Forkme.Control()]
-                    Div [Class "container"] -< [
-                        loginInfo' ctx
-                        Div [Class "pull-down"] -< [
-                            About.header
-                        ]
+let sub pageId =
+    let pageIdStr = string pageId
+    withTemplate
+        Templates.sub
+        ("Sub Title " + pageIdStr)
+        ("Sub meta description " + pageIdStr + ".")
+        (fun ctx ->
+            Div [Id "wrap"] -< [
+                nav None ctx
+                Div [Class "container"; Id "main"] -< [
+                    Div [Class "page-header"] -< [
+                        H1 [Text <| "Sub Page " + pageIdStr]
                     ]
                 ]
-                Shared.footer
-            ]
+                Div [Id "push"]
+            ])
 
-    let sub pageId =
-        let pageId' = string pageId
-        let title = "Sub Title " + pageId'
-        let metaDescription = "Sub meta description " + pageId' + "."
-        withMainTemplate title metaDescription <| fun ctx ->
-            [
-                Div [Class "wrap"] -< [
-                    Shared.navigation
-                    Div [new Forkme.Control()]
-                    Div [Class "container"] -< [
-                        loginInfo' ctx
-                        Div [Class "pull-down"] -< [
-                            Div [Text <| "Sub page " + pageId']
-                        ]
-                    ]
-                ]
-                Shared.footer
-            ]
-
-    let login (redirectAction: Action option) =
-        withMainTemplate "Login" "" <| fun ctx ->
+let login (redirectAction: Action option) =
+    withTemplate
+        Templates.login
+        "Login"
+        ""
+        (fun ctx ->
             let redirectLink =
                 match redirectAction with
                 | Some action -> action
                 | None        -> Action.Admin
                 |> ctx.Link
-            [
-                Div [Class "wrap"] -< [
-                    Div [Class "container"] -< [
-                        Shared.navigation
-                        Div [Class "pull-down"] -< [
-                            Div [new Login.Control(redirectLink)]
-                        ]
-                    ]
+            Div [Id "wrap"] -< [
+                nav None ctx
+                Div [Class "container"; Id "main"] -< [
+                    Div [new Login.Control(redirectLink)]
                 ]
-                Shared.footer
-            ]
+            ])
 
-    let admin =
-        withMainTemplate "Admin" "" <| fun ctx ->
-            [
-                Div [Class "wrap"] -< [
-                    Shared.navigation
-                    Div [Class "container"] -< [
-                        loginInfo' ctx
-                        Div [Class "pull-down"] -< [
-                            H1 [Text "Admin page"]
-                        ]
+let admin =
+    withTemplate<Action>
+        Templates.admin
+        "Admin"
+        ""
+        (fun ctx ->
+            Div [Id "wrap"] -< [
+                nav None ctx
+                Div [Class "container"; Id "main"] -< [
+                    Div [Class "page-header"] -< [
+                        H1 [Text "Admin Page"]
                     ]
                 ]
-                Shared.footer
-            ]
+                Div [Id "push"]
+            ])
 
-    let custom404 =
-        withMainTemplate "Error - Page Not Found" "" <| fun ctx ->
-            [
-                Div [Class "wrap"] -< [
-                    Shared.navigation
-                    Div [Class "container"] -< [
-                        Div [Class "pull-down"] -< [
-                            H2 [Text "Page Not Found"]
-                            P [Text "The requested URL doesn't exist."]
-                        ]
+let error =
+    withTemplate<Action>
+        Templates.error
+        "Error - Page Not Found"
+        ""
+        (fun ctx ->
+            Div [Id "wrap"] -< [
+                nav None ctx
+                Div [Class "container"; Id "main"] -< [
+                    Div [Class "page-header"] -< [
+                        H1 [Text "Error"]
+                        P [Text "The requested URL doesn't exist."]
                     ]
                 ]
-                Shared.footer
-            ]
+                Div [Id "push"]
+            ])

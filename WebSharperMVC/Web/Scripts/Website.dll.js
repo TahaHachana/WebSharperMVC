@@ -1,27 +1,15 @@
 (function()
 {
- var Global=this,Runtime=this.IntelliFactory.Runtime,Website,Forkme,WebSharper,Html,Operators,Default,List,HTML5,Remoting,Login,Client,window,Concurrency,alert,EventsPervasives,jQuery;
+ var Global=this,Runtime=this.IntelliFactory.Runtime,WebSharper,Html,Default,List,HTML5,Operators,Remoting,Website,Login,Client,window,Concurrency,alert,EventsPervasives,jQuery;
  Runtime.Define(Global,{
   Website:{
-   Forkme:{
-    Control:Runtime.Class({
-     get_Body:function()
-     {
-      return Forkme.main();
-     }
-    }),
-    main:function()
-    {
-     return Operators.add(Default.A(List.ofArray([Default.HRef("https://github.com/TahaHachana/WebSharperMVC")])),List.ofArray([Default.Img(List.ofArray([Default.Src("https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"),Default.Alt("Fork me on GitHub"),Default.Id("forkme")]))]));
-    }
-   },
    Login:{
     Client:{
      loginForm:function(redirectUrl)
      {
-      var userInput,_this,_this1,_this2,submitBtn,x,_this3,f,x1,x4,x5,_this4,x6,_this5,x7,_this6,_this7,x8,_this8;
-      userInput=Default.Input(List.ofArray([(_this=Default.Attr(),_this.NewAttr("type","text")),(_this1=HTML5.Attr(),_this1.NewAttr("autofocus","autofocus")),(_this2=HTML5.Attr(),_this2.NewAttr("placeholder","username"))]));
-      submitBtn=(x=Operators.add(Default.Button(List.ofArray([(_this3=Default.Attr(),_this3.NewAttr("type","button")),Default.Attr().Class("btn"),Default.Id("login-btn")])),List.ofArray([Default.Text("Submit")])),(f=(x1=function()
+      var userInput,_this,_this1,_this2,submitBtn,x,_this3,f,x1,_this4,x4,_this5,x5,_this6,_this7,x6,_this8,_this9,x7,_thisa;
+      userInput=Default.Input(List.ofArray([(_this=Default.Attr(),_this.NewAttr("type","text")),(_this1=HTML5.Attr(),_this1.NewAttr("autofocus","autofocus")),Default.Attr().Class("form-control"),(_this2=Default.Attr(),_this2.NewAttr("id","username"))]));
+      submitBtn=(x=Operators.add(Default.Button(List.ofArray([(_this3=Default.Attr(),_this3.NewAttr("type","button")),Default.Attr().Class("btn btn-primary btn-block"),Default.Id("login-btn")])),List.ofArray([Default.Text("Submit")])),(f=(x1=function()
       {
        return function()
        {
@@ -37,7 +25,7 @@
          {
           if(_arg11.$==1)
            {
-            window.location.href=redirectUrl;
+            window.location.assign(redirectUrl);
             return Concurrency.Return(null);
            }
           else
@@ -62,18 +50,18 @@
       {
        return EventsPervasives.Events().OnClick(x1,arg10);
       }),(f(x),x)));
-      return Default.Form(List.ofArray([(x4=List.ofArray([(x5=List.ofArray([Default.Text("Login")]),(_this4=Default.Tags(),_this4.NewTag("legend",x5))),(x6=List.ofArray([Default.Text("Username")]),(_this5=Default.Tags(),_this5.NewTag("label",x6))),userInput,(x7=List.ofArray([Default.Text("Password")]),(_this6=Default.Tags(),_this6.NewTag("label",x7))),Client.passInput()]),(_this7=Default.Tags(),_this7.NewTag("fieldset",x4))),(x8=List.ofArray([submitBtn]),(_this8=Default.Tags(),_this8.NewTag("fieldset",x8)))]));
+      return Operators.add(Default.Form(List.ofArray([Default.Attr().NewAttr("role","form"),(_this4=Default.Attr(),_this4.NewAttr("id","signin"))])),List.ofArray([Default.H2(List.ofArray([Default.Text("Please sign in")])),Operators.add((x4=List.ofArray([Default.Attr().Class("form-group")]),(_this5=Default.Tags(),_this5.NewTag("fieldset",x4))),List.ofArray([(x5=List.ofArray([Default.Text("Username"),(_this6=Default.Attr(),_this6.NewAttr("for","username"))]),(_this7=Default.Tags(),_this7.NewTag("label",x5))),userInput,(x6=List.ofArray([Default.Text("Password"),(_this8=Default.Attr(),_this8.NewAttr("for","password"))]),(_this9=Default.Tags(),_this9.NewTag("label",x6))),Client.passInput()])),(x7=List.ofArray([submitBtn]),(_thisa=Default.Tags(),_thisa.NewTag("fieldset",x7)))]));
      },
      passInput:Runtime.Field(function()
      {
       var x,_this,_this1,f,x1;
-      x=Default.Input(List.ofArray([(_this=Default.Attr(),_this.NewAttr("type","text")),(_this1=HTML5.Attr(),_this1.NewAttr("placeholder","password"))]));
+      x=Default.Input(List.ofArray([(_this=Default.Attr(),_this.NewAttr("type","password")),Default.Attr().Class("form-control"),(_this1=Default.Attr(),_this1.NewAttr("id","password"))]));
       f=(x1=function()
       {
-       return function(key)
+       return function(keyCode)
        {
         var matchValue;
-        matchValue=key.KeyCode;
+        matchValue=keyCode.KeyCode;
         if(matchValue===13)
          {
           return jQuery("#login-btn").click();
@@ -102,15 +90,14 @@
  });
  Runtime.OnInit(function()
  {
-  Website=Runtime.Safe(Global.Website);
-  Forkme=Runtime.Safe(Website.Forkme);
   WebSharper=Runtime.Safe(Global.IntelliFactory.WebSharper);
   Html=Runtime.Safe(WebSharper.Html);
-  Operators=Runtime.Safe(Html.Operators);
   Default=Runtime.Safe(Html.Default);
   List=Runtime.Safe(WebSharper.List);
   HTML5=Runtime.Safe(Default.HTML5);
+  Operators=Runtime.Safe(Html.Operators);
   Remoting=Runtime.Safe(WebSharper.Remoting);
+  Website=Runtime.Safe(Global.Website);
   Login=Runtime.Safe(Website.Login);
   Client=Runtime.Safe(Login.Client);
   window=Runtime.Safe(Global.window);
