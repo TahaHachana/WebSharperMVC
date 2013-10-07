@@ -7,12 +7,12 @@ open Controller
 let router : Router<Action> =
     Router.Table
         [
-            Home       , "/"
-            Login None , "/login"
-            Logout     , "/logout"
-            Error      , "/error"
-            Admin      , "/admin"
-            About      , "/about"
+            Home      , "/"
+            Login None, "/login"
+            Logout    , "/logout"
+            Error     , "/error"
+            Admin     , "/admin"
+            About     , "/about"
         ]
     <|>
     Router.Infer()

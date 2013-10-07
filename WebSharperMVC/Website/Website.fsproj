@@ -36,11 +36,12 @@
   <Import Project="$(WEBSHARPER_HOME)/IntelliFactory.WebSharper.Sitelets.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <ItemGroup>
-    <Compile Include="Model.fs" />
     <Compile Include="Skin.fs" />
     <Compile Include="Templates.fs" />
     <Compile Include="Login.fs" />
+    <Compile Include="Model.fs" />
     <Compile Include="Nav.fs" />
+    <Compile Include="Content.fs" />
     <Compile Include="Views.fs" />
     <Compile Include="Controller.fs" />
     <Compile Include="Site.fs" />

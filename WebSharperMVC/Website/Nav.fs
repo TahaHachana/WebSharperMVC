@@ -13,7 +13,7 @@ let loginInfo (ctx: Context<_>) =
         | Some user ->
             A [
                 Class "navbar-right btn btn-default navbar-btn"
-                HRef (random (ctx.Link Action.Logout))
+                HRef (random <| ctx.Link Action.Logout)
             ] -< [Text <| "Sign out (" + user + ")"]
         | None ->
             A [
@@ -21,30 +21,32 @@ let loginInfo (ctx: Context<_>) =
                 HRef ("/login")
             ] -< [Text "Sign in"]
 
+let navToggle =
+    Button [
+        Type "button"
+        Class "navbar-toggle"
+        HTML5.Data "toggle" "collapse"
+        HTML5.Data "target" ".navbar-ex1-collapse"
+    ] -< [
+        Span [Class "sr-only"] -< [Text "Toggle navigation"]
+        Span [Class "icon-bar"]
+        Span [Class "icon-bar"]
+        Span [Class "icon-bar"]
+    ]
+
 let navHeader =
     Div [Class "navbar-header"] -< [
-        Button [
-            Type "button"
-            Class "navbar-toggle"
-            HTML5.Data "toggle" "collapse"
-            HTML5.Data "target" ".navbar-ex1-collapse"
-        ] -< [
-            Span [Class "sr-only"] -< [Text "Toggle navigation"]
-            Span [Class "icon-bar"]
-            Span [Class "icon-bar"]
-            Span [Class "icon-bar"]
-        ]
+        navToggle
         A [Class "navbar-brand"; HRef "/"] -< [Text "Brand"]
     ]
 
 let li activeLiOption href txt =
     match activeLiOption with
-        | None -> LI [A [HRef href] -< [Text txt]]
-        | Some activeLi ->
-            if txt = activeLi then
-                LI [Class "active"] -< [A [HRef href] -< [Text txt]]
-            else
-                LI [A [HRef href] -< [Text txt]]
+        | Some activeLi when txt = activeLi ->
+            LI [Class "active"] -< [
+                A [HRef href] -< [Text txt]
+            ]
+        | _ -> LI [A [HRef href] -< [Text txt]]
 
 let navDiv activeLi ctx =
     Div [Class "collapse navbar-collapse navbar-ex1-collapse"] -< [
@@ -55,7 +57,7 @@ let navDiv activeLi ctx =
         loginInfo ctx
     ]
 
-let nav activeLi ctx : Content.HtmlElement =
+let navElt activeLi ctx : Content.HtmlElement =
     HTML5.Nav [
         Class "navbar navbar-inverse navbar-fixed-top"
         NewAttribute "role" "navigation"

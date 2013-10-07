@@ -2,51 +2,68 @@
 
 open IntelliFactory.WebSharper
 
-type private LoginInfo =
+type LoginInfo =
     {
         Name     : string
         Password : string
     }
 
-type private Access = Denied | Granted
+type Access = Denied | Granted
 
-module private Server =
+module Server =
     open IntelliFactory.WebSharper.Sitelets
 
     [<Rpc>]
     let login loginInfo =
         async {
             let access =
-                if loginInfo.Password = "" then
+                match loginInfo.Password = "" with
+                | false -> Denied
+                | true ->
                     UserSession.LoginUser loginInfo.Name
                     Granted
-                else Denied
-            return access }
+            return access
+        }
 
-module private Client =
+module Client =
     open IntelliFactory.WebSharper.Html
-    open IntelliFactory.WebSharper.Formlet
     open IntelliFactory.WebSharper.JQuery
 
     [<JavaScript>]
     let passInput =
-        Input [Attr.Type "password"; Attr.Class "form-control"; Attr.Id "password"]
+        Input [
+            Attr.Class "form-control"
+            Attr.Id "password"
+            Attr.Type "password"
+        ]
         |>! OnKeyDown (fun _ keyCode ->
             match keyCode.KeyCode with
-                | 13 -> JQuery.Of("#login-btn").Click().Ignore
-                | _  -> ())
+            | 13 -> JQuery.Of("#login-btn").Click().Ignore
+            | _  -> ())
 
     [<JavaScript>]
     let loginForm (redirectUrl : string) =
-        let userInput = Input [Attr.Type "text"; HTML5.Attr.AutoFocus "autofocus"; Attr.Class "form-control"; Attr.Id "username"]
+        let userInput =
+            Input [
+                Attr.Class "form-control"
+                Attr.Id "username"
+                Attr.Type "text"
+                HTML5.Attr.AutoFocus "autofocus"
+            ]
         let submitBtn =
-            Button [Attr.Type "button"; Attr.Class "btn btn-primary btn-block"; Id "login-btn"] -< [Text "Submit"]
+            Button [
+                Attr.Class "btn btn-primary btn-block"
+                Attr.Id "login-btn"
+                Attr.Type "button"
+            ]
+            -- Text "Submit"
             |>! OnClick (fun _ _ ->
                 async {
-                    let! access = Server.login {Name = userInput.Value; Password = passInput.Value}
+                    let info = {Name = userInput.Value; Password = passInput.Value}
+                    let! access = Server.login info
                     match access with
-                        | Denied -> JavaScript.Alert "Login failed"
-                        | Granted -> Html5.Window.Self.Location.Assign redirectUrl
+                    | Denied -> JavaScript.Alert "Login failed"
+                    | Granted -> Html5.Window.Self.Location.Assign redirectUrl
                 } |> Async.Start)
         Form [Attr.NewAttr "role" "form"; Attr.Id "signin"] -< [
             H2 [Text "Please sign in"]

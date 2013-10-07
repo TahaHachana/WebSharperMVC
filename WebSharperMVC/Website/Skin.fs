@@ -5,16 +5,16 @@ open IntelliFactory.WebSharper.Sitelets
 
 type Page =
     {
-        Title           : string
-        MetaDescription : string
-        Body            : Content.HtmlElement
+        Title    : string
+        MetaDesc : string
+        Body     : Content.HtmlElement
     }
 
-    static member Make title metaDescription makeBody context =
+    static member Make title metaDesc makeBody context =
         {
-            Title           = title
-            MetaDescription = metaDescription
-            Body            = makeBody context
+            Title    = title
+            MetaDesc = metaDesc
+            Body     = makeBody context
         }
 
 let loadFrequency =
@@ -31,11 +31,11 @@ let makeTemplate<'T> path =
 let makePageTemplate path =
     makeTemplate<Page> path
     |> fun x ->
-        x.With("title"           , fun x -> x.Title)
-         .With("meta-description", fun x -> x.MetaDescription)
-         .With("body"            , fun x -> x.Body)
+        x.With("title"    , fun x -> x.Title)
+         .With("meta-desc", fun x -> x.MetaDesc)
+         .With("body"     , fun x -> x.Body)
 
-let withTemplate<'T> template title metaDescription makeBody : Content<'T> =
+let withTemplate<'T> template title metaDesc makeBody : Content<'T> =
     Content.WithTemplate
         template
-        <| fun context -> Page.Make title metaDescription makeBody context
+        <| fun context -> Page.Make title metaDesc makeBody context
