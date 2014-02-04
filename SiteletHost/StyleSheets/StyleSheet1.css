@@ -1,0 +1,43 @@
+﻿#main {
+    padding-top: 60px;
+}
+
+.jumbotron {
+    background-color: white;
+}
+
+#push {
+    height: 60px;
+}
+
+footer div {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+#login-form {
+    width: 300px;
+    margin: 100px auto;
+    /*margin-top: 100px;*/
+    padding: 30px;
+}
+
+/* Sticky footer styles from http://getbootstrap.com/examples/sticky-footer-navbar/ */
+
+html,
+body {
+    height: 100%;
+}
+
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -60px;
+    padding: 0 0 60px;
+}
+
+#footer {
+    height: 60px;
+    background-color: #f5f5f5;
+}
