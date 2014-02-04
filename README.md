@@ -4,7 +4,7 @@ WebSharperMVC
 About
 -----
 
-A WebSharper application template.
+A WebSharper MVC application template.
 
 Contact
 -------
