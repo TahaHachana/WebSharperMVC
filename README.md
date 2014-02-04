@@ -4,7 +4,7 @@ WebSharperMVC
 About
 -----
 
-A WebSharper Sitelets application template.
+A WebSharper application template.
 
 Contact
 -------
