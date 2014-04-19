@@ -24,9 +24,9 @@ let sub pageId =
     let pageIdStr = string pageId
     withTemplate
         Templates.sub
-        ("Sub Title " + pageIdStr)
         ("Sub meta description " + pageIdStr + ".")
-        Home.nav
+        ("Sub Title " + pageIdStr)
+        Sub.nav
         <| fun ctx -> Sub.body ctx pageIdStr
 
 let login (action:Action option) =

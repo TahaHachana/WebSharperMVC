@@ -46,14 +46,10 @@ module Sub =
     let nav ctx = navElt None ctx
 
     let body ctx pageId =
-        Div [Id "wrap"] -< [
-            navElt None ctx
-            Div [Class "container"; Id "main"] -< [
-                Div [Class "page-header"] -< [
-                    H1 [Text <| "Sub Page " + pageId]
-                ]
+        Div [Class "container"] -< [
+            Div [Class "page-header"] -< [
+                H1 [Text <| "Sub Page " + pageId + " header"]
             ]
-            Div [Id "push"]
         ]
 
 module Login =
