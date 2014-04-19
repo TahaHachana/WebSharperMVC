@@ -57,16 +57,14 @@
      },
      loginRender:function(name,password,submit)
      {
-      var arg10,arg101,x1,arg00;
-      arg10=List.ofArray([Default.Attr().NewAttr("for","username"),Default.Text("Username")]);
-      arg101=List.ofArray([Default.Attr().NewAttr("for","password"),Default.Text("Password")]);
+      var x1,arg00;
       x1=Operators.add(Controls.input("text",function(x)
       {
        return x;
       },function(x)
       {
        return x;
-      },password),List.ofArray([Default.Attr().Class("form-control"),Default.Attr().NewAttr("type","password")]));
+      },password),List.ofArray([Default.Attr().Class("form-control"),Default.Attr().NewAttr("type","password"),HTML5.Attr().NewAttr("placeholder","Password")]));
       arg00=function()
       {
        return function(keyCode)
@@ -75,13 +73,13 @@
        };
       };
       EventsPervasives.Events().OnKeyDown(arg00,x1);
-      return Operators.add(Default.Div(List.ofArray([Default.Attr().Class("well"),Default.Attr().NewAttr("id","login-form")])),List.ofArray([Operators.add(Default.Div(List.ofArray([Default.Attr().Class("form-group")])),List.ofArray([Default.Tags().NewTag("label",arg10),Operators.add(Controls.input("text",function(x)
+      return Operators.add(Default.Div(List.ofArray([Default.Attr().Class("well"),Default.Attr().NewAttr("id","login-form")])),List.ofArray([Operators.add(Default.Div(List.ofArray([Default.Attr().Class("form-group")])),List.ofArray([Operators.add(Controls.input("text",function(x)
       {
        return x;
       },function(x)
       {
        return x;
-      },name),List.ofArray([Default.Attr().Class("form-control"),Default.Attr().NewAttr("type","text"),HTML5.Attr().NewAttr("autofocus","autofocus")]))])),Operators.add(Default.Div(List.ofArray([Default.Attr().Class("form-group")])),List.ofArray([Default.Tags().NewTag("label",arg101),x1])),Operators.add(Controls.SubmitValidate(submit),List.ofArray([Default.Attr().Class("btn btn-primary"),Default.Attr().NewAttr("id","submit-btn")]))]));
+      },name),List.ofArray([Default.Attr().Class("form-control"),Default.Attr().NewAttr("type","text"),HTML5.Attr().NewAttr("autofocus","autofocus"),HTML5.Attr().NewAttr("required","required"),HTML5.Attr().NewAttr("placeholder","Username")]))])),Operators.add(Default.Div(List.ofArray([Default.Attr().Class("form-group")])),List.ofArray([x1])),Operators.add(Controls.SubmitValidate(submit),List.ofArray([Default.Attr().Class("btn btn-primary"),Default.Attr().NewAttr("id","submit-btn")]))]));
      }
     },
     Control:Runtime.Class({

@@ -47,18 +47,19 @@ module Client =
     let loginRender name password submit =
             Div [Attr.Class "well"; Attr.Id "login-form"] -< [
                 Div [Attr.Class "form-group"] -< [
-                    Label [Attr.For "username"; Text "Username"]
                     Controls.Input name -< [
                         Attr.Class "form-control"
                         Attr.Type "text"
                         HTML5.Attr.AutoFocus "autofocus"
+                        HTML5.Attr.Required "required"
+                        HTML5.Attr.PlaceHolder "Username"
                     ]
                 ]
                 Div [Attr.Class "form-group"] -< [
-                    Label [Attr.For "password"; Text "Password"]
                     Controls.Input password -< [
                         Attr.Class "form-control"
                         Attr.Type "password"
+                        HTML5.Attr.PlaceHolder "Password"
                     ]
                     |>! OnKeyDown (fun _ keyCode ->
                         match keyCode.KeyCode with

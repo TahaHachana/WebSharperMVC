@@ -37,7 +37,7 @@ module About =
     let body ctx =            
         Div [Class "container"] -< [
             Div [Class "page-header"] -< [
-                H1 [Text "About page header"]
+                H1 [Text "About Page Header"]
             ]
         ]
 
@@ -48,13 +48,13 @@ module Sub =
     let body ctx pageId =
         Div [Class "container"] -< [
             Div [Class "page-header"] -< [
-                H1 [Text <| "Sub Page " + pageId + " header"]
+                H1 [Text <| "Sub Page " + pageId + " Header"]
             ]
         ]
 
 module Login =
 
-    let nav ctx = navElt (Some "Home") ctx
+    let nav ctx = navElt None ctx
 
     let body action action' ctx =
         let link =
@@ -62,26 +62,21 @@ module Login =
             | Some action -> action
             | None -> action'
             |> ctx.Link
-        Div [Id "wrap"] -< [
-            navElt None ctx
-            Div [Class "container"; Id "main"] -< [
+        Div [
+            Div [Class "container"] -< [
                 Div [new Login.Control(link)]
             ]
         ]
 
 module Admin =
 
-    let nav ctx = navElt (Some "Home") ctx
+    let nav ctx = navElt None ctx
 
     let body ctx =
-        Div [Id "wrap"] -< [
-            navElt None ctx
-            Div [Class "container"; Id "main"] -< [
-                Div [Class "page-header"] -< [
-                    H1 [Text "Admin Page"]
-                ]
+        Div [Class "container"] -< [
+            Div [Class "page-header"] -< [
+                H1 [Text "Admin Page Header"]
             ]
-            Div [Id "push"]
         ]
 
 module Error =

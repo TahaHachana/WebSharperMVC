@@ -32,10 +32,9 @@ let sub pageId =
 let login (action:Action option) =
     withTemplate
         Templates.login
-        "Login"
         ""
-        Home.nav
-
+        "Login"
+        Login.nav
         <| fun ctx -> Login.body action Action.Admin ctx
 
 let admin =
