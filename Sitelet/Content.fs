@@ -81,16 +81,12 @@ module Admin =
 
 module Error =
 
-    let nav ctx = navElt (Some "Home") ctx
+    let nav ctx = navElt None ctx
 
     let body ctx =
-        Div [Id "wrap"] -< [
-            navElt None ctx
-            Div [Class "container"; Id "main"] -< [
-                Div [Class "page-header"] -< [
-                    H1 [Text "Error"]
-                    P [Text "The requested URL doesn't exist."]
-                ]
+        Div [Class "container"] -< [
+            Div [Class "page-header"] -< [
+                H1 [Text "Error"]
+                P [Text "The requested URL doesn't exist."]
             ]
-            Div [Id "push"]
         ]

@@ -48,8 +48,7 @@ let admin =
 let error =
     withTemplate<Action>
         Templates.error
-        "Error - Page Not Found"
         ""
-        Home.nav
-
+        "Error - Page Not Found"
+        Error.nav
         Error.body
