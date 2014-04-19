@@ -10,26 +10,26 @@ declare module Sitelet {
     module Login {
         module LoginInfo {
             var New : {
-                (username: string, password: string): _Login.LoginInfo;
+                (username: string, password: string): __ABBREV.__Login.LoginInfo;
             };
         }
         module Client {
             var loginPiglet : {
-                <_M1>(init: _Login.LoginInfo): _Piglets.Piglet<_Login.LoginInfo, {
+                <_M1>(init: __ABBREV.__Login.LoginInfo): __ABBREV.__Piglets.Piglet<__ABBREV.__Login.LoginInfo, {
                     (x: {
-                        (x: _Piglets.Stream<string>): {
-                            (x: _Piglets.Stream<string>): {
-                                (x: _Piglets.Submitter<_Login.LoginInfo>): _M1;
+                        (x: __ABBREV.__Piglets.Stream<string>): {
+                            (x: __ABBREV.__Piglets.Stream<string>): {
+                                (x: __ABBREV.__Piglets.Submitter<__ABBREV.__Login.LoginInfo>): _M1;
                             };
                         };
                     }): _M1;
                 }>;
             };
             var loginRender : {
-                <_M1>(name: _Piglets.Stream<string>, password: _Piglets.Stream<string>, submit: _Piglets.Submitter<_M1>): _Html.Element;
+                <_M1>(name: __ABBREV.__Piglets.Stream<string>, password: __ABBREV.__Piglets.Stream<string>, submit: __ABBREV.__Piglets.Submitter<_M1>): __ABBREV.__Html.Element;
             };
             var form : {
-                (redirectUrl: string): _Html.Element;
+                (redirectUrl: string): __ABBREV.__Html.Element;
             };
         }
         interface LoginInfo {
@@ -39,21 +39,21 @@ declare module Sitelet {
         interface Access {
         }
         interface Control {
-            get_Body(): _Html.IPagelet;
+            get_Body(): __ABBREV.__Html.IPagelet;
         }
     }
     module Skin {
         interface Page {
             MetaDescription: string;
             Title: string;
-            Nav: _Html1.Element<_Web.Control>;
-            Body: _Html1.Element<_Web.Control>;
+            Nav: any;
+            Body: any;
         }
     }
+}
+declare module __ABBREV {
     
-    import _Login = Sitelet.Login;
-    import _Piglets = IntelliFactory.WebSharper.Piglets;
-    import _Html = IntelliFactory.WebSharper.Html;
-    import _Html1 = IntelliFactory.Html.Html;
-    import _Web = IntelliFactory.WebSharper.Web;
+    export import __Login = Sitelet.Login;
+    export import __Piglets = IntelliFactory.WebSharper.Piglets;
+    export import __Html = IntelliFactory.WebSharper.Html;
 }

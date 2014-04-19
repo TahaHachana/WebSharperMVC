@@ -37,7 +37,7 @@ module About =
     let body ctx =            
         Div [Class "container"] -< [
             Div [Class "page-header"] -< [
-                H1 [Text "About"]
+                H1 [Text "About page header"]
             ]
         ]
 

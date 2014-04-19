@@ -14,11 +14,10 @@ let home =
 
 let about =
     withTemplate<Action>
-        Templates.home
-        "About Title"
+        Templates.about
         "About Meta Description"
-        Home.nav
-
+        "About Title"
+        About.nav
         About.body
 
 let sub pageId =
