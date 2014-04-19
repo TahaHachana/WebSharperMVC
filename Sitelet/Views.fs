@@ -40,9 +40,9 @@ let login (action:Action option) =
 let admin =
     withTemplate<Action>
         Templates.admin
-        "Admin"
         ""
-        Home.nav
+        "Admin"
+        Admin.nav
         Admin.body
 
 let error =
