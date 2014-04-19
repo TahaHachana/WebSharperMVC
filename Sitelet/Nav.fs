@@ -26,7 +26,7 @@ let navToggle =
         Attributes.Type "button"
         Class "navbar-toggle"
         HTML5.Data "toggle" "collapse"
-        HTML5.Data "target" ".navbar-ex1-collapse"
+        HTML5.Data "target" ".navbar-collapse"
     ] -< [
         Span [Class "sr-only"] -< [Text "Toggle navigation"]
         Span [Class "icon-bar"]
@@ -49,7 +49,7 @@ let li activeLiOption href txt =
         | _ -> LI [A [HRef href] -< [Text txt]]
 
 let navDiv activeLi ctx =
-    Div [Class "collapse navbar-collapse navbar-ex1-collapse"] -< [
+    Div [Class "collapse navbar-collapse"] -< [
         UL [Class "nav navbar-nav"] -< [
             li activeLi "/" "Home"
             li activeLi "/about" "About"
@@ -59,7 +59,7 @@ let navDiv activeLi ctx =
 
 let navElt activeLi ctx : Content.HtmlElement =
     HTML5.Nav [
-        Class "navbar navbar-inverse navbar-fixed-top"
+        Class "navbar navbar-default" // navbar-fixed-top"
         NewAttribute "role" "navigation"
     ] -< [
         Div [Class "container"] -< [

@@ -6,59 +6,45 @@ open Sitelet.Nav
 
 module Home =
 
-    let jumbotron =
-        Div [Class "jumbotron"] -< [
-            Div [Class "container text-center"] -< [
-                H1 [Text "Jumbotron"]
-                P [Text "Featured content or information."]
-                P [
-                    A [Class "btn btn-success btn-lg"] -< [
-                        Text "Learn more"
-                    ]
-                ]
-            ]
-        ]
-
-    let colDiv (ctx:Context<_>) x =
+    let subDiv (ctx:Context<_>) x =
+        let xString = string x
         Div [Class "col-lg-4"] -< [
             H2 [Text "Heading"]
-            P [Text "Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui."]
+            P [Text <| "Sub page " + xString + "."]
             P [
                 A [
                     Class "btn btn-primary"
-                    HRef ("/sub/" + string x)
+                    HRef ("/sub/" + xString)
                 ] -< [Text "View details »"]
             ]
         ]
 
-    let body ctx =
-        Div [Id "wrap"] -< [
-            navElt (Some "Home") ctx
-            Div [Class "container"; Id "main"] -< [
-                jumbotron
-                HR []
-                Div [Class "row"] -< [
-                    colDiv ctx 1
-                    colDiv ctx 2
-                    colDiv ctx 3
-                ]
+    let nav ctx = navElt (Some "Home") ctx
+
+    let body ctx : Content.HtmlElement =
+        Div [Class "container"] -< [
+            Div [Class "row"] -< [
+                subDiv ctx 1
+                subDiv ctx 2
+                subDiv ctx 3
             ]
-            Div [Id "push"]
         ]
 
 module About =
-    let body ctx =
-        Div [Id "wrap"] -< [
-            navElt (Some "About") ctx
-            Div [Class "container"; Id "main"] -< [
-                Div [Class "page-header"] -< [
-                    H1 [Text "About"]
-                ]
+
+    let nav ctx = navElt (Some "About") ctx
+
+    let body ctx =            
+        Div [Class "container"] -< [
+            Div [Class "page-header"] -< [
+                H1 [Text "About"]
             ]
-            Div [Id "push"]
         ]
 
 module Sub =
+
+    let nav ctx = navElt None ctx
+
     let body ctx pageId =
         Div [Id "wrap"] -< [
             navElt None ctx
@@ -71,6 +57,9 @@ module Sub =
         ]
 
 module Login =
+
+    let nav ctx = navElt (Some "Home") ctx
+
     let body action action' ctx =
         let link =
             match action with
@@ -85,6 +74,9 @@ module Login =
         ]
 
 module Admin =
+
+    let nav ctx = navElt (Some "Home") ctx
+
     let body ctx =
         Div [Id "wrap"] -< [
             navElt None ctx
@@ -97,6 +89,9 @@ module Admin =
         ]
 
 module Error =
+
+    let nav ctx = navElt (Some "Home") ctx
+
     let body ctx =
         Div [Id "wrap"] -< [
             navElt None ctx

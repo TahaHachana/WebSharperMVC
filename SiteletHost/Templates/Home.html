@@ -1,27 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>${title}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="${meta-description}" />
     <meta name="generator" content="websharper" data-replace="scripts" />
 
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <title>${title}</title>
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" media="screen" />
     <link href="StyleSheets/StyleSheet1.css" rel="stylesheet" media="screen" />
 
     <!--[if lt IE 9]>
-      <script src="/Scripts/html5shiv.js"></script>
-      <script src="/Scripts/respond.min.js"></script>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
 <body>
+    <!-- Navigation -->
+    <div data-replace="nav">Nav</div>
+
+    <div class="jumbotron">
+        <div class="text-center">
+            <h1>Jumbotron</h1>
+            <p>Featured content goes here.</p>
+            <p>
+                <a class="btn btn-success btn-lg">Learn more</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Page content -->
     <div data-replace="body">BODY</div>
 
+    <!-- Footer -->
     <footer id="footer">
         <div class="container">
             <p>Built with <a href="http://www.websharper.com" target="_blank">WebSharper</a></p>
         </div>
     </footer>
+
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 </body>

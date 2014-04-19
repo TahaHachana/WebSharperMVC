@@ -55,6 +55,49 @@
   <ItemGroup>
     <Content Include="robots.txt" />
     <Content Include="Scripts\*.*" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.Formlet.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.Formlet.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.Formlet.min.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.Html.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.JavaScript\Runtime.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.JavaScript\Runtime.min.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.Reactive.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.Reactive.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.Reactive.min.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Collections.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Collections.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Collections.min.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Control.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Control.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Control.min.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Dom.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Ecma.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Formlet.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Formlet.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Formlet.min.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Html.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Html.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Html.min.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Html5.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.JQuery.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.min.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Piglets.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Piglets.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Piglets.min.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Sitelets.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Sitelets.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Sitelets.min.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Testing.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Testing.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Testing.min.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper.Web.d.ts" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper\Json.js" />
+    <Content Include="Scripts\WebSharper\IntelliFactory.WebSharper\Json.min.js" />
+    <Content Include="Scripts\WebSharper\Sitelet.d.ts" />
+    <Content Include="Scripts\WebSharper\Sitelet.js" />
+    <Content Include="Scripts\WebSharper\Sitelet.min.js" />
     <Content Include="StyleSheets\StyleSheet1.css" />
     <Content Include="Templates\About.html" />
     <Content Include="Templates\Admin.html" />
@@ -73,6 +116,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <None Include="Properties\PublishProfiles\WebSharperMVCFileSystem.pubxml" />
+    <Content Include="Scripts\WebSharper\build.tmp" />
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

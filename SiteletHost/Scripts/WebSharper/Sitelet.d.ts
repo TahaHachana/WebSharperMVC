@@ -44,8 +44,9 @@ declare module Sitelet {
     }
     module Skin {
         interface Page {
-            Title: string;
             MetaDescription: string;
+            Title: string;
+            Nav: _Html1.Element<_Web.Control>;
             Body: _Html1.Element<_Web.Control>;
         }
     }

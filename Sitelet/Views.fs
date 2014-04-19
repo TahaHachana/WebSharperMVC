@@ -7,8 +7,9 @@ open Sitelet.Skin
 let home =
     withTemplate<Action>
         Templates.home
-        "Home Title"
         "Home Meta Description"
+        "Home Title"
+        Home.nav
         Home.body
 
 let about =
@@ -16,6 +17,8 @@ let about =
         Templates.home
         "About Title"
         "About Meta Description"
+        Home.nav
+
         About.body
 
 let sub pageId =
@@ -24,6 +27,7 @@ let sub pageId =
         Templates.sub
         ("Sub Title " + pageIdStr)
         ("Sub meta description " + pageIdStr + ".")
+        Home.nav
         <| fun ctx -> Sub.body ctx pageIdStr
 
 let login (action:Action option) =
@@ -31,6 +35,8 @@ let login (action:Action option) =
         Templates.login
         "Login"
         ""
+        Home.nav
+
         <| fun ctx -> Login.body action Action.Admin ctx
 
 let admin =
@@ -38,6 +44,7 @@ let admin =
         Templates.admin
         "Admin"
         ""
+        Home.nav
         Admin.body
 
 let error =
@@ -45,4 +52,6 @@ let error =
         Templates.error
         "Error - Page Not Found"
         ""
+        Home.nav
+
         Error.body

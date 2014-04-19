@@ -5,15 +5,17 @@ open System.Web
 
 type Page =
     {
-        Title : string
         MetaDescription : string
+        Title : string
+        Nav : Content.HtmlElement
         Body : Content.HtmlElement
     }
 
-    static member New title metaDescription makeBody context =
+    static member New metaDescription title makeNav makeBody context =
         {
-            Title = title
             MetaDescription = metaDescription
+            Title = title
+            Nav = makeNav context
             Body = makeBody context
         }
 
@@ -31,11 +33,13 @@ let makeTemplate<'T> path =
 let makePageTemplate path =
     makeTemplate<Page> path
     |> fun template ->
-        template.With("title" , fun page -> page.Title)
+        template
             .With("meta-description", fun page -> page.MetaDescription)
+            .With("title" , fun page -> page.Title)
+            .With("nav", fun page -> page.Nav)
             .With("body", fun page -> page.Body)
 
-let withTemplate<'T> template title metaDesc makeBody : Content<'T> =
+let withTemplate<'T> template metaDesc title makeNav makeBody : Content<'T> =
     Content.WithTemplate
         template
-        (fun context -> Page.New title metaDesc makeBody context)
+        (fun context -> Page.New metaDesc title makeNav makeBody context)
