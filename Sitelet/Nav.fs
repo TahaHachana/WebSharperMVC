@@ -59,7 +59,7 @@ let navDiv activeLi ctx =
 
 let navElt activeLi ctx : Content.HtmlElement =
     HTML5.Nav [
-        Class "navbar navbar-default" // navbar-fixed-top"
+        Class "navbar navbar-default"
         NewAttribute "role" "navigation"
     ] -< [
         Div [Class "container"] -< [

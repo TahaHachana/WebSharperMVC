@@ -78,6 +78,13 @@
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\packages\WebSharper.2.5.92.21\build\WebSharper.targets" Condition="Exists('..\packages\WebSharper.2.5.92.21\build\WebSharper.targets')" />
+  <Import Project="..\packages\WebSharper.2.5.105.38\build\WebSharper.targets" Condition="Exists('..\packages\WebSharper.2.5.105.38\build\WebSharper.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Activez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est le suivant : {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\WebSharper.2.5.105.38\build\WebSharper.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\WebSharper.2.5.105.38\build\WebSharper.targets'))" />
+  </Target>
   <ItemGroup>
     <Compile Include="Skin.fs" />
     <Compile Include="Templates.fs" />
@@ -91,10 +98,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="IntelliFactory.WebSharper.Piglets">
-      <HintPath>..\packages\WebSharper.Piglets.0.1.45.99\lib\net45\IntelliFactory.WebSharper.Piglets.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />

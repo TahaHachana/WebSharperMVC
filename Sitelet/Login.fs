@@ -66,7 +66,9 @@ module Client =
                         | 13 -> JQuery.Of("#submit-btn").Click().Ignore
                         | _  -> ())
                 ]
-                Controls.SubmitValidate submit -< [Attr.Class "btn btn-primary"; Attr.Id "submit-btn"]
+                Controls.SubmitValidate submit -< [
+                    Attr.Class "btn btn-primary"; Attr.Id "submit-btn"
+                ]
             ]
 
     let form redirectUrl =

@@ -42,4 +42,4 @@ let makePageTemplate path =
 let withTemplate<'T> template metaDesc title makeNav makeBody : Content<'T> =
     Content.WithTemplate
         template
-        (fun context -> Page.New metaDesc title makeNav makeBody context)
+        <| fun context -> Page.New metaDesc title makeNav makeBody context
