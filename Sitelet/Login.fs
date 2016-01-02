@@ -75,6 +75,7 @@ module Client =
         loginPiglet {Username = ""; Password = ""}
         |> Piglet.Run (fun loginInfo ->
             async {
+                JavaScript.Log loginInfo
                 let! access = Server.login loginInfo
                 match access with
                 | Denied -> JavaScript.Alert "Login failed"

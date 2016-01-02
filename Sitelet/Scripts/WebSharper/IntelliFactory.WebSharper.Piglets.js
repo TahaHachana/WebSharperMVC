@@ -47,29 +47,16 @@
        },
        Dispose:function()
        {
-        var inputSequence,enumerator,x,f;
-        inputSequence=this.subscriptions.contents;
-        enumerator=Enumerator.Get(inputSequence);
-        Runtime.While(function()
-        {
-         return enumerator.MoveNext();
-        },function()
-        {
-         var s;
-         s=enumerator.get_Current(),s.Dispose();
-        });
-        x=this.choiceSubscriptions;
-        f=function(source)
-        {
-         return Seq.iter(function(_arg3)
+        var enumerator;
+        enumerator=Enumerator.Get(this.subscriptions.contents);
+        while(enumerator.MoveNext())
          {
-          var activePatternResult,s;
-          activePatternResult=Operators.KeyValue(_arg3);
-          s=activePatternResult[1][1];
-          return s.Dispose();
-         },source);
-        };
-        return f(x);
+          enumerator.get_Current().Dispose();
+         }
+        return Seq.iter(function(_arg3)
+        {
+         return(Operators.KeyValue(_arg3))[1][1].Dispose();
+        },this.choiceSubscriptions);
        },
        Subscribe:function(f)
        {
@@ -102,23 +89,25 @@
         r.subscriptions={
          contents:List.ofArray([r.chooser.stream.SubscribeImmediate(function(res)
          {
-          var x,f,arg00,f1,objectArg1;
-          x=(f=(arg00=function(i)
+          return r.pStream.Trigger(Result.Map(function(i)
           {
-           var p,objectArg;
-           return[i,r.choiceSubscriptions.ContainsKey(i)?(r.choiceSubscriptions.get_Item(i))[0]:(p=choice(i),(r.choiceSubscriptions.set_Item(i,[p,p.stream.Subscribe((objectArg=r.out,function(arg001)
-           {
-            return objectArg.Trigger(arg001);
-           }))]),p))];
-          },function(arg10)
-          {
-           return Result.Map(arg00,arg10);
-          }),f(res));
-          f1=(objectArg1=r.pStream,function(arg001)
-          {
-           return objectArg1.Trigger(arg001);
-          });
-          return f1(x);
+           var _,p,objectArg;
+           if(r.choiceSubscriptions.ContainsKey(i))
+            {
+             _=(r.choiceSubscriptions.get_Item(i))[0];
+            }
+           else
+            {
+             p=choice(i);
+             objectArg=r.out;
+             r.choiceSubscriptions.set_Item(i,[p,p.stream.Subscribe(function(arg00)
+             {
+              return objectArg.Trigger(arg00);
+             })]);
+             _=p;
+            }
+           return[i,_];
+          },res));
          })])
         };
         return r;
@@ -154,14 +143,7 @@
       {
        return ConcreteWriter.New1(function(_arg1)
        {
-        if(_arg1.$==1)
-         {
-          return null;
-         }
-        else
-         {
-          return trigger(_arg1.$0);
-         }
+        return _arg1.$==1?null:trigger(_arg1.$0);
        });
       },
       New1:function(trigger)
@@ -175,85 +157,41 @@
      Controls:{
       Attr:function(reader,attrName,render,element)
       {
-       var f;
-       f=function(w)
+       Operators1.OnAfterRender(function(element1)
        {
-        return Operators1.OnAfterRender(function(element1)
+        var set;
+        set=function(x)
         {
-         var set,x2,f1;
-         set=function(x)
-         {
-          var x1,value,objectArg,arg00;
-          if(x.$==0)
-           {
-            x1=x.$0;
-            value=render(x1);
-            objectArg=element1["HtmlProvider@32"];
-            return((arg00=element1.Body,function(arg10)
-            {
-             return function(arg20)
-             {
-              return objectArg.SetAttribute(arg00,arg10,arg20);
-             };
-            })(attrName))(value);
-           }
-          else
-           {
-            return null;
-           }
-         };
-         set(reader.get_Latest());
-         x2=reader.Subscribe(set);
-         f1=function(value)
-         {
-          value;
-         };
-         return f1(x2);
-        },w);
-       };
-       f(element);
+         return x.$==0?element1["HtmlProvider@32"].SetAttribute(element1.Body,attrName,render(x.$0)):null;
+        };
+        set(reader.get_Latest());
+        reader.Subscribe(set);
+        return;
+       },element);
        return element;
       },
       AttrResult:function(reader,attrName,render,element)
       {
-       var f;
-       f=function(w)
+       Operators1.OnAfterRender(function(element1)
        {
-        return Operators1.OnAfterRender(function(element1)
+        var set;
+        set=function(x)
         {
-         var set,x1,f1;
-         set=function(x)
-         {
-          var value,objectArg,arg00;
-          value=render(x);
-          objectArg=element1["HtmlProvider@32"];
-          return((arg00=element1.Body,function(arg10)
-          {
-           return function(arg20)
-           {
-            return objectArg.SetAttribute(arg00,arg10,arg20);
-           };
-          })(attrName))(value);
-         };
-         set(reader.get_Latest());
-         x1=reader.Subscribe(set);
-         f1=function(value)
-         {
-          value;
-         };
-         return f1(x1);
-        },w);
-       };
-       f(element);
+         return element1["HtmlProvider@32"].SetAttribute(element1.Body,attrName,render(x));
+        };
+        set(reader.get_Latest());
+        reader.Subscribe(set);
+        return;
+       },element);
        return element;
       },
       Button:function(submit)
       {
-       var x,f,arg00;
+       var x,arg00;
        x=Default.Button(Runtime.New(T,{
         $:0
        }));
-       f=(arg00=function()
+       arg00=function()
        {
         return function()
         {
@@ -262,55 +200,39 @@
           $0:null
          }));
         };
-       },function(arg10)
-       {
-        return EventsPervasives.Events().OnClick(arg00,arg10);
-       });
-       f(x);
+       };
+       EventsPervasives.Events().OnClick(arg00,x);
        return x;
       },
       ButtonValidate:function(submit)
       {
-       var x,f,_arg00_;
-       x=Controls.Button(submit);
-       f=(_arg00_=submit.get_Input(),function(_arg10_)
-       {
-        return Controls.EnableOnSuccess(_arg00_,_arg10_);
-       });
-       return f(x);
+       var _arg10_;
+       _arg10_=Controls.Button(submit);
+       return Controls.EnableOnSuccess(submit.get_Input(),_arg10_);
       },
       CheckBox:function(stream)
       {
-       var id,i,_this,_this1,matchValue,x,value;
+       var id,i,matchValue;
        id=(Controls.nextId())(null);
-       i=Default.Input(List.ofArray([(_this=Default.Attr(),_this.NewAttr("type","checkbox")),(_this1=Default.Attr(),_this1.NewAttr("id",id))]));
+       i=Default.Input(List.ofArray([Default.Attr().NewAttr("type","checkbox"),Default.Attr().NewAttr("id",id)]));
        matchValue=stream.get_Latest();
        if(matchValue.$==0)
         {
-         x=matchValue.$0;
-         i.Body.checked=x;
+         i.Body.checked=matchValue.$0;
         }
-       value=stream.Subscribe(function(_arg1)
+       stream.Subscribe(function(_arg1)
        {
-        var x1;
+        var x;
         if(_arg1.$==1)
          {
           return null;
          }
         else
          {
-          x1=_arg1.$0;
-          if(!Unchecked.Equals(i.Body.checked,x1))
-           {
-            i.Body.checked=x1;
-           }
-          else
-           {
-            return null;
-           }
+          x=_arg1.$0;
+          return!Unchecked.Equals(i.Body.checked,x)?void(i.Body.checked=x):null;
          }
        });
-       value;
        i.Body.addEventListener("change",function()
        {
         return stream.Trigger(Runtime.New(Result,{
@@ -322,99 +244,45 @@
       },
       Css:function(reader,attrName,render,element)
       {
-       var f;
-       f=function(w)
+       Operators1.OnAfterRender(function(element1)
        {
-        return Operators1.OnAfterRender(function(element1)
+        var set;
+        set=function(x)
         {
-         var set,x2,f1;
-         set=function(x)
-         {
-          var x1,prop,objectArg,arg00;
-          if(x.$==0)
-           {
-            x1=x.$0;
-            prop=render(x1);
-            objectArg=element1["HtmlProvider@32"];
-            return((arg00=element1.Body,function(arg10)
-            {
-             return function(arg20)
-             {
-              return objectArg.SetCss(arg00,arg10,arg20);
-             };
-            })(attrName))(prop);
-           }
-          else
-           {
-            return null;
-           }
-         };
-         set(reader.get_Latest());
-         x2=reader.Subscribe(set);
-         f1=function(value)
-         {
-          value;
-         };
-         return f1(x2);
-        },w);
-       };
-       f(element);
+         return x.$==0?element1["HtmlProvider@32"].SetCss(element1.Body,attrName,render(x.$0)):null;
+        };
+        set(reader.get_Latest());
+        reader.Subscribe(set);
+        return;
+       },element);
        return element;
       },
       CssResult:function(reader,attrName,render,element)
       {
-       var f;
-       f=function(w)
+       Operators1.OnAfterRender(function(element1)
        {
-        return Operators1.OnAfterRender(function(element1)
+        var set;
+        set=function(x)
         {
-         var set,x1,f1;
-         set=function(x)
-         {
-          var prop,objectArg,arg00;
-          prop=render(x);
-          objectArg=element1["HtmlProvider@32"];
-          return((arg00=element1.Body,function(arg10)
-          {
-           return function(arg20)
-           {
-            return objectArg.SetCss(arg00,arg10,arg20);
-           };
-          })(attrName))(prop);
-         };
-         set(reader.get_Latest());
-         x1=reader.Subscribe(set);
-         f1=function(value)
-         {
-          value;
-         };
-         return f1(x1);
-        },w);
-       };
-       f(element);
+         return element1["HtmlProvider@32"].SetCss(element1.Body,attrName,render(x));
+        };
+        set(reader.get_Latest());
+        reader.Subscribe(set);
+        return;
+       },element);
        return element;
       },
       EnableOnSuccess:function(reader,element)
       {
-       var f;
-       f=function(w)
+       Operators1.OnAfterRender(function(el)
        {
-        return Operators1.OnAfterRender(function(el)
+        el.Body.disabled=!reader.get_Latest().get_isSuccess();
+        reader.Subscribe(function(x)
         {
-         var x,f1;
-         el.Body.disabled=!reader.get_Latest().get_isSuccess();
-         x=reader.Subscribe(function(x1)
-         {
-          el.Body.disabled=!x1.get_isSuccess();
-         });
-         f1=function(value)
-         {
-          value;
-         };
-         return f1(x);
-        },w);
-       };
-       f(element);
+         el.Body.disabled=!x.get_isSuccess();
+        });
+        return;
+       },element);
        return element;
       },
       HtmlContainer:Runtime.Class({
@@ -424,19 +292,16 @@
        },
        MoveUp:function(i)
        {
-        var elt_i,elt_i_1,value,value1;
+        var elt_i,elt_i_1;
         elt_i=this.container.Body.childNodes[i];
         elt_i_1=this.container.Body.childNodes[i-1];
-        value=this.container.Body.removeChild(elt_i);
-        value;
-        value1=this.container.Body.insertBefore(elt_i,elt_i_1);
-        value1;
+        this.container.Body.removeChild(elt_i);
+        this.container.Body.insertBefore(elt_i,elt_i_1);
+        return;
        },
        Remove:function(i)
        {
-        var value;
-        value=this.container.Body.removeChild(this.container.Body.childNodes[i]);
-        value;
+        this.container.Body.removeChild(this.container.Body.childNodes[i]);
        },
        get_Container:function()
        {
@@ -463,110 +328,79 @@
       },
       Link:function(submit)
       {
-       var x,_this,f;
-       x=Default.A(List.ofArray([(_this=Default.Attr(),_this.NewAttr("href","#"))]));
-       f=function(w)
+       var x;
+       x=Default.A(List.ofArray([Default.Attr().NewAttr("href","#")]));
+       Operators1.OnAfterRender(function(e)
        {
-        return Operators1.OnAfterRender(function(e)
+        return jQuery(e.Body).on("click",function()
         {
-         return jQuery(e.Body).on("click",function()
-         {
-          submit.Trigger(Runtime.New(Result,{
-           $:0,
-           $0:null
-          }));
-          return false;
-         });
-        },w);
-       };
-       f(x);
+         submit.Trigger(Runtime.New(Result,{
+          $:0,
+          $0:null
+         }));
+         return false;
+        });
+       },x);
        return x;
       },
       Radio:function(stream,values)
       {
-       var name,values1,elts,f,mapping,x4,f2;
+       var name,values1,mapping,elts,x2;
        name=(Controls.nextId())(null);
        values1=List.ofSeq(values);
-       elts=(f=(mapping=Runtime.Tupled(function(tupledArg)
+       mapping=Runtime.Tupled(function(tupledArg)
        {
-        var x,label,id,input,x1,_this,_this1,_this2,f1,x2,x3,_this3,_this4;
+        var x,label,id,x1,arg00,input,arg10;
         x=tupledArg[0];
         label=tupledArg[1];
         id=(Controls.nextId())(null);
-        input=(x1=Default.Input(List.ofArray([(_this=Default.Attr(),_this.NewAttr("type","radio")),(_this1=Default.Attr(),_this1.NewAttr("name",name)),(_this2=Default.Attr(),_this2.NewAttr("id",id))])),(f1=(x2=function(div)
+        x1=Default.Input(List.ofArray([Default.Attr().NewAttr("type","radio"),Default.Attr().NewAttr("name",name),Default.Attr().NewAttr("id",id)]));
+        arg00=function(div)
         {
-         if(div.Body.checked)
-          {
-           return stream.Trigger(Runtime.New(Result,{
-            $:0,
-            $0:x
-           }));
-          }
-         else
-          {
-           return null;
-          }
-        },function(arg10)
-        {
-         return EventsPervasives.Events().OnChange(x2,arg10);
-        }),(f1(x1),x1)));
-        return[input,Default.Span(List.ofArray([input,(x3=List.ofArray([(_this3=Default.Attr(),_this3.NewAttr("for",id)),Default.Text(label)]),(_this4=Default.Tags(),_this4.NewTag("label",x3)))]))];
-       }),function(list)
-       {
-        return List.map(mapping,list);
-       }),f(values1));
-       x4=Default.Div(Seq.map(Runtime.Tupled(function(tuple)
+         return div.Body.checked?stream.Trigger(Runtime.New(Result,{
+          $:0,
+          $0:x
+         })):null;
+        };
+        EventsPervasives.Events().OnChange(arg00,x1);
+        input=x1;
+        arg10=List.ofArray([Default.Attr().NewAttr("for",id),Default.Text(label)]);
+        return[input,Default.Span(List.ofArray([input,Default.Tags().NewTag("label",arg10)]))];
+       });
+       elts=List.map(mapping,values1);
+       x2=Default.Div(Seq.map(Runtime.Tupled(function(tuple)
        {
         return tuple[1];
        }),elts));
-       f2=function(w)
+       Operators1.OnAfterRender(function()
        {
-        return Operators1.OnAfterRender(function()
+        var set;
+        set=function(_arg1)
         {
-         var set,x1,f3;
-         set=function(_arg1)
-         {
-          var v,f1,action;
-          if(_arg1.$==1)
+         var v;
+         if(_arg1.$==1)
+          {
+           return null;
+          }
+         else
+          {
+           v=_arg1.$0;
+           return List.iter2(Runtime.Tupled(function(tupledArg)
            {
-            return null;
-           }
-          else
-           {
-            v=_arg1.$0;
-            f1=(action=Runtime.Tupled(function(tupledArg)
+            var x;
+            x=tupledArg[0];
+            return Runtime.Tupled(function(tupledArg1)
             {
-             var x,_arg2;
-             x=tupledArg[0];
-             _arg2=tupledArg[1];
-             return Runtime.Tupled(function(tupledArg1)
-             {
-              var input,_arg11;
-              input=tupledArg1[0];
-              _arg11=tupledArg1[1];
-              input.Body.checked=Unchecked.Equals(x,v);
-             });
-            }),function(list1)
-            {
-             return function(list2)
-             {
-              return List.iter2(action,list1,list2);
-             };
+             tupledArg1[0].Body.checked=Unchecked.Equals(x,v);
             });
-            return(f1(values1))(elts);
-           }
-         };
-         set(stream.get_Latest());
-         x1=stream.Subscribe(set);
-         f3=function(value)
-         {
-          value;
-         };
-         return f3(x1);
-        },w);
-       };
-       f2(x4);
-       return x4;
+           }),values1,elts);
+          }
+        };
+        set(stream.get_Latest());
+        stream.Subscribe(set);
+        return;
+       },x2);
+       return x2;
       },
       RenderChoice:function(choice,renderIt,container)
       {
@@ -578,157 +412,93 @@
       },
       Select:function(stream,values)
       {
-       var values1,elts,f,mapping,x2,x3,f1,arg00,f2;
-       (Controls.nextId())(null);
+       var name,values1,mapping,elts,x,arg00,x1;
+       name=(Controls.nextId())(null);
        values1=Arrays.ofSeq(values);
-       elts=(f=(mapping=Runtime.Tupled(function(tupledArg)
+       mapping=Runtime.Tupled(function(tupledArg)
        {
-        var x,label,id,_this,x1,_this1;
-        x=tupledArg[0];
+        var label,id;
         label=tupledArg[1];
         id=(Controls.nextId())(null);
-        return Operators1.add((_this=Default.Tags(),(x1=List.ofArray([(_this1=Default.Attr(),_this1.NewAttr("value",id))]),_this.NewTag("option",x1))),List.ofArray([Default.Text(label)]));
-       }),function(array)
+        return Operators1.add(Default.Tags().NewTag("option",List.ofArray([Default.Attr().NewAttr("value",id)])),List.ofArray([Default.Text(label)]));
+       });
+       elts=Arrays.map(mapping,values1);
+       x=Default.Select(elts);
+       arg00=function(e)
        {
-        return array.map(function(x)
-        {
-         return mapping(x);
-        });
-       }),f(values1));
-       x2=(x3=Default.Select(elts),(f1=(arg00=function(e)
-       {
-        if(e.Body.selectedIndex>=0)
-         {
-          return stream.Trigger(Runtime.New(Result,{
-           $:0,
-           $0:values1[e.Body.selectedIndex][0]
-          }));
-         }
-        else
-         {
-          return null;
-         }
-       },function(arg10)
-       {
-        return EventsPervasives.Events().OnChange(arg00,arg10);
-       }),(f1(x3),x3)));
-       f2=function(w)
-       {
-        return Operators1.OnAfterRender(function()
-        {
-         var x,f3;
-         x=stream.SubscribeImmediate(function(_arg1)
-         {
-          var v,matchValue,i,_this,objectArg,arg001;
-          if(_arg1.$==1)
-           {
-            return null;
-           }
-          else
-           {
-            v=_arg1.$0;
-            matchValue=Arrays.tryFindIndex(Runtime.Tupled(function(tupledArg)
-            {
-             var _v_,_arg11;
-             _v_=tupledArg[0];
-             _arg11=tupledArg[1];
-             return Unchecked.Equals(v,_v_);
-            }),values1);
-            if(matchValue.$==0)
-             {
-              return null;
-             }
-            else
-             {
-              i=matchValue.$0;
-              _this=elts[i];
-              objectArg=_this["HtmlProvider@32"];
-              return((arg001=_this.Body,function(arg10)
-              {
-               return function(arg20)
-               {
-                return objectArg.SetAttribute(arg001,arg10,arg20);
-               };
-              })("selected"))("");
-             }
-           }
-         });
-         f3=function(value)
-         {
-          value;
-         };
-         return f3(x);
-        },w);
+        return e.Body.selectedIndex>=0?stream.Trigger(Runtime.New(Result,{
+         $:0,
+         $0:values1[e.Body.selectedIndex][0]
+        })):null;
        };
-       f2(x2);
-       return x2;
+       EventsPervasives.Events().OnChange(arg00,x);
+       x1=x;
+       Operators1.OnAfterRender(function()
+       {
+        stream.SubscribeImmediate(function(_arg1)
+        {
+         var v,matchValue,_this;
+         if(_arg1.$==1)
+          {
+           return null;
+          }
+         else
+          {
+           v=_arg1.$0;
+           matchValue=Arrays.tryFindIndex(Runtime.Tupled(function(tupledArg)
+           {
+            return Unchecked.Equals(v,tupledArg[0]);
+           }),values1);
+           if(matchValue.$==0)
+            {
+             return null;
+            }
+           else
+            {
+             _this=elts[matchValue.$0];
+             return _this["HtmlProvider@32"].SetAttribute(_this.Body,"selected","");
+            }
+          }
+        });
+       },x1);
+       return x1;
       },
       Show:function(reader,render,container)
       {
        return Controls.ShowResult(reader,function(_arg1)
        {
-        var x;
-        if(_arg1.$==1)
-         {
-          return Seq.empty();
-         }
-        else
-         {
-          x=_arg1.$0;
-          return render(x);
-         }
+        return _arg1.$==1?Seq.empty():render(_arg1.$0);
        },container);
       },
       ShowErrors:function(reader,render,container)
       {
        return Controls.ShowResult(reader,function(_arg1)
        {
-        var m,f,mapping,x;
-        if(_arg1.$==1)
-         {
-          m=_arg1.$0;
-          return render((f=(mapping=function(m1)
-          {
-           return m1.get_Message();
-          },function(list)
-          {
-           return List.map(mapping,list);
-          }),f(m)));
-         }
-        else
-         {
-          x=_arg1.$0;
-          return Seq.empty();
-         }
+        return _arg1.$==1?render(List.map(function(m)
+        {
+         return m.get_Message();
+        },_arg1.$0)):Seq.empty();
        },container);
       },
       ShowResult:function(reader,render,container)
       {
-       var inputSequence,enumerator,value;
-       inputSequence=render(reader.get_Latest());
-       enumerator=Enumerator.Get(inputSequence);
-       Runtime.While(function()
+       var enumerator;
+       enumerator=Enumerator.Get(render(reader.get_Latest()));
+       while(enumerator.MoveNext())
+        {
+         container.AppendI(enumerator.get_Current());
+        }
+       reader.Subscribe(function(x)
        {
-        return enumerator.MoveNext();
-       },function()
-       {
-        container.AppendI(enumerator.get_Current());
-       });
-       value=reader.Subscribe(function(x)
-       {
-        var inputSequence1,enumerator1;
+        var enumerator1;
         container["HtmlProvider@32"].Clear(container.Body);
-        inputSequence1=render(x);
-        enumerator1=Enumerator.Get(inputSequence1);
-        Runtime.While(function()
-        {
-         return enumerator1.MoveNext();
-        },function()
-        {
-         container.AppendI(enumerator1.get_Current());
-        });
+        enumerator1=Enumerator.Get(render(x));
+        while(enumerator1.MoveNext())
+         {
+          container.AppendI(enumerator1.get_Current());
+         }
+        return;
        });
-       value;
        return container;
       },
       ShowString:function(reader,render,container)
@@ -740,9 +510,9 @@
       },
       Submit:function(submit)
       {
-       var x,_this,f,arg00;
-       x=Default.Input(List.ofArray([(_this=Default.Attr(),_this.NewAttr("type","submit"))]));
-       f=(arg00=function()
+       var x,arg00;
+       x=Default.Input(List.ofArray([Default.Attr().NewAttr("type","submit")]));
+       arg00=function()
        {
         return function()
         {
@@ -751,26 +521,19 @@
           $0:null
          }));
         };
-       },function(arg10)
-       {
-        return EventsPervasives.Events().OnClick(arg00,arg10);
-       });
-       f(x);
+       };
+       EventsPervasives.Events().OnClick(arg00,x);
        return x;
       },
       SubmitValidate:function(submit)
       {
-       var x,f,_arg00_;
-       x=Controls.Submit(submit);
-       f=(_arg00_=submit.get_Input(),function(_arg10_)
-       {
-        return Controls.EnableOnSuccess(_arg00_,_arg10_);
-       });
-       return f(x);
+       var _arg10_;
+       _arg10_=Controls.Submit(submit);
+       return Controls.EnableOnSuccess(submit.get_Input(),_arg10_);
       },
       TextArea:function(stream)
       {
-       var i,matchValue,value,ev;
+       var i,matchValue,ev;
        i=Default.TextArea(Runtime.New(T,{
         $:0
        }));
@@ -779,7 +542,7 @@
         {
          i.set_Value(matchValue.$0);
         }
-       value=stream.Subscribe(function(_arg1)
+       stream.Subscribe(function(_arg1)
        {
         var x;
         if(_arg1.$==1)
@@ -789,17 +552,9 @@
         else
          {
           x=_arg1.$0;
-          if(i.get_Value()!==x)
-           {
-            return i.set_Value(x);
-           }
-          else
-           {
-            return null;
-           }
+          return i.get_Value()!==x?i.set_Value(x):null;
          }
        });
-       value;
        ev=function()
        {
         return stream.Trigger(Runtime.New(Result,{
@@ -813,54 +568,48 @@
       },
       WithLabel:function(label,element)
       {
-       var id,x,_this,_this1,_this2;
+       var id,arg10;
        id=(Controls.nextId())(null);
-       return Default.Span(List.ofArray([(x=List.ofArray([(_this=Default.Attr(),_this.NewAttr("for",id)),Default.Text(label)]),(_this1=Default.Tags(),_this1.NewTag("label",x))),Operators1.add(element,List.ofArray([(_this2=Default.Attr(),_this2.NewAttr("id",id))]))]));
+       arg10=List.ofArray([Default.Attr().NewAttr("for",id),Default.Text(label)]);
+       return Default.Span(List.ofArray([Default.Tags().NewTag("label",arg10),Operators1.add(element,List.ofArray([Default.Attr().NewAttr("id",id)]))]));
       },
       WithLabelAfter:function(label,element)
       {
-       var id,_this,x,_this1,_this2;
+       var id,arg10;
        id=(Controls.nextId())(null);
-       return Default.Span(List.ofArray([Operators1.add(element,List.ofArray([(_this=Default.Attr(),_this.NewAttr("id",id))])),(x=List.ofArray([(_this1=Default.Attr(),_this1.NewAttr("for",id)),Default.Text(label)]),(_this2=Default.Tags(),_this2.NewTag("label",x)))]));
+       arg10=List.ofArray([Default.Attr().NewAttr("for",id),Default.Text(label)]);
+       return Default.Span(List.ofArray([Operators1.add(element,List.ofArray([Default.Attr().NewAttr("id",id)])),Default.Tags().NewTag("label",arg10)]));
       },
       input:function(type,ofString,toString,stream)
       {
-       var i,_this,matchValue,x,value,ev;
-       i=Default.Input(List.ofArray([(_this=Default.Attr(),_this.NewAttr("type",type))]));
+       var i,matchValue,ev;
+       i=Default.Input(List.ofArray([Default.Attr().NewAttr("type",type)]));
        matchValue=stream.get_Latest();
        if(matchValue.$==0)
         {
-         x=matchValue.$0;
-         i.set_Value(toString(x));
+         i.set_Value(toString(matchValue.$0));
         }
-       value=stream.Subscribe(function(_arg1)
+       stream.Subscribe(function(_arg1)
        {
-        var x1,s;
+        var s;
         if(_arg1.$==1)
          {
           return null;
          }
         else
          {
-          x1=_arg1.$0;
-          s=toString(x1);
-          if(i.get_Value()!==s)
-           {
-            return i.set_Value(s);
-           }
-          else
-           {
-            return null;
-           }
+          s=toString(_arg1.$0);
+          return i.get_Value()!==s?i.set_Value(s):null;
          }
        });
-       value;
        ev=function()
        {
-        return stream.Trigger(Runtime.New(Result,{
+        var v;
+        v=Runtime.New(Result,{
          $:0,
          $0:ofString(i.get_Value())
-        }));
+        });
+        return!Unchecked.Equals(v,stream.get_Latest())?stream.Trigger(v):null;
        };
        i.Body.addEventListener("keyup",ev,true);
        i.Body.addEventListener("change",ev,true);
@@ -948,29 +697,22 @@
        },
        Render:function(c,f)
        {
-        var add,_this=this,matchValue,xs,value1;
+        var add,_this=this,matchValue;
         add=function(x)
         {
-         var piglet,value,getThisIndex,moveUp,moveUp1,canMoveUp,canMoveDown,inMoveUp,inMoveDown,outSubscription,subMoveUp,subMoveDown,subUpSubscription,subDownSubscription,_delete;
+         var piglet,getThisIndex,moveUp,moveDown,moveUp1,canMoveUp,canMoveDown,inMoveUp,inMoveDown,outSubscription,subMoveUp,subMoveDown,subUpSubscription,subDownSubscription;
          piglet=_this.p.call(null,x);
          _this.streams.Add(piglet.stream);
-         value=piglet.stream.SubscribeImmediate(function()
+         piglet.stream.SubscribeImmediate(function()
          {
           return _this.update();
          });
-         value;
          getThisIndex=function()
          {
-          var x1,f1;
-          x1=_this.streams;
-          f1=function(source)
+          return Seq.findIndex(function(x1)
           {
-           return Seq.findIndex(function(x2)
-           {
-            return x2.get_Id()===piglet.stream.get_Id();
-           },source);
-          };
-          return f1(x1);
+           return x1.get_Id()===piglet.stream.get_Id();
+          },_this.streams);
          };
          moveUp=function(i)
          {
@@ -988,47 +730,37 @@
             return null;
            }
          };
+         moveDown=function()
+         {
+          return moveUp(getThisIndex(null)+1);
+         };
          moveUp1=function()
          {
           return moveUp(getThisIndex(null));
          };
          canMoveUp=function()
          {
-          if(getThisIndex(null)>0)
-           {
-            return Runtime.New(Result,{
-             $:0,
-             $0:null
-            });
-           }
-          else
-           {
-            return Runtime.New(Result,{
-             $:1,
-             $0:Runtime.New(T,{
-              $:0
-             })
-            });
-           }
+          return getThisIndex(null)>0?Runtime.New(Result,{
+           $:0,
+           $0:null
+          }):Runtime.New(Result,{
+           $:1,
+           $0:Runtime.New(T,{
+            $:0
+           })
+          });
          };
          canMoveDown=function()
          {
-          if(getThisIndex(null)<_this.streams.get_Count()-1)
-           {
-            return Runtime.New(Result,{
-             $:0,
-             $0:null
-            });
-           }
-          else
-           {
-            return Runtime.New(Result,{
-             $:1,
-             $0:Runtime.New(T,{
-              $:0
-             })
-            });
-           }
+          return getThisIndex(null)<_this.streams.get_Count()-1?Runtime.New(Result,{
+           $:0,
+           $0:null
+          }):Runtime.New(Result,{
+           $:1,
+           $0:Runtime.New(T,{
+            $:0
+           })
+          });
          };
          inMoveUp=Stream1.New(canMoveUp(null),{
           $:0
@@ -1044,11 +776,8 @@
          subMoveUp=Submitter.New(inMoveUp,false);
          subMoveDown=Submitter.New(inMoveDown,false);
          subUpSubscription=subMoveUp.Subscribe(Result.Iter(moveUp1));
-         subDownSubscription=subMoveDown.Subscribe(Result.Iter(function()
-         {
-          return moveUp(getThisIndex(null)+1);
-         }));
-         _delete=function()
+         subDownSubscription=subMoveDown.Subscribe(Result.Iter(moveDown));
+         return c.Add(piglet.view.call(null,f(Operations.New(function()
          {
           var i;
           i=getThisIndex(null);
@@ -1058,30 +787,17 @@
           subUpSubscription.Dispose();
           subDownSubscription.Dispose();
           return _this.update();
-         };
-         return c.Add(piglet.view.call(null,f(Operations.New(_delete,subMoveUp,subMoveDown))));
+         },subMoveUp,subMoveDown))));
         };
         matchValue=_this.out.get_Latest();
         if(matchValue.$==0)
          {
-          xs=matchValue.$0;
-          xs.forEach(function(x)
-          {
-           add(x);
-          });
+          Arrays.iter(add,matchValue.$0);
          }
-        value1=_this.adder.stream.Subscribe(function(_arg1)
+        _this.adder.stream.Subscribe(function(_arg1)
         {
-         if(_arg1.$==0)
-          {
-           return add(_arg1.$0);
-          }
-         else
-          {
-           return null;
-          }
+         return _arg1.$==0?add(_arg1.$0):null;
         });
-        value1;
         return c.get_Container();
        },
        Subscribe:function(f)
@@ -1098,81 +814,41 @@
        },
        update:function()
        {
-        var x,x1,f,arg00,g,f1,objectArg;
-        x=(x1=Seq.fold(function(acc)
+        var objectArg;
+        objectArg=this.out;
+        return objectArg.Trigger(Result.Map(function(x)
+        {
+         return Arrays.ofSeq(List.rev(x));
+        },Seq.fold(function(acc)
         {
          return function(cur)
          {
-          var matchValue,m1,m2,m,m3,l,x2;
+          var matchValue;
           matchValue=[acc,cur.get_Latest()];
-          if(matchValue[0].$==1)
-           {
-            if(matchValue[1].$==1)
-             {
-              m1=matchValue[0].$0;
-              m2=matchValue[1].$0;
-              return Runtime.New(Result,{
-               $:1,
-               $0:List.append(m2,m1)
-              });
-             }
-            else
-             {
-              m=matchValue[0].$0;
-              return Runtime.New(Result,{
-               $:1,
-               $0:m
-              });
-             }
-           }
-          else
-           {
-            if(matchValue[1].$==1)
-             {
-              m3=matchValue[1].$0;
-              return Runtime.New(Result,{
-               $:1,
-               $0:m3
-              });
-             }
-            else
-             {
-              l=matchValue[0].$0;
-              x2=matchValue[1].$0;
-              return Runtime.New(Result,{
-               $:0,
-               $0:Runtime.New(T,{
-                $:1,
-                $0:x2,
-                $1:l
-               })
-              });
-             }
-           }
+          return matchValue[0].$==1?matchValue[1].$==1?Runtime.New(Result,{
+           $:1,
+           $0:List.append(matchValue[1].$0,matchValue[0].$0)
+          }):Runtime.New(Result,{
+           $:1,
+           $0:matchValue[0].$0
+          }):matchValue[1].$==1?Runtime.New(Result,{
+           $:1,
+           $0:matchValue[1].$0
+          }):Runtime.New(Result,{
+           $:0,
+           $0:Runtime.New(T,{
+            $:1,
+            $0:matchValue[1].$0,
+            $1:matchValue[0].$0
+           })
+          });
          };
         },Runtime.New(Result,{
          $:0,
          $0:Runtime.New(T,{
           $:0
          })
-        }),this.streams),(f=(arg00=(g=function(list)
-        {
-         return Arrays.ofSeq(list);
-        },function(x2)
-        {
-         return g(function(list)
-         {
-          return List.rev(list);
-         }(x2));
-        }),function(arg10)
-        {
-         return Result.Map(arg00,arg10);
-        }),f(x1)));
-        f1=(objectArg=this.out,function(arg001)
-        {
-         return objectArg.Trigger(arg001);
-        });
-        return f1(x);
+        }),this.streams)));
        }
       },{
        New:function(p,out,adder)
@@ -1194,37 +870,32 @@
       },{
        New:function(p,out,init,_default)
        {
-        var r,submitter,trigger,objectArg,value;
+        var r,submitter,objectArg,trigger;
         r=Runtime.New(this,Stream2.New(p,out,init));
-        r.submitStream=(submitter=Stream1.New(Runtime.New(Result,{
+        submitter=Stream1.New(Runtime.New(Result,{
          $:1,
          $0:Runtime.New(T,{
           $:0
          })
         }),{
          $:0
-        }),(trigger=(objectArg=init.get_Stream(),function(arg00)
+        });
+        objectArg=init.get_Stream();
+        trigger=function(arg00)
         {
          return objectArg.Trigger(arg00);
-        }),(value=submitter.Subscribe(function(_arg1)
+        };
+        submitter.Subscribe(function(_arg1)
         {
-         var msgs;
-         if(_arg1.$==0)
-          {
-           return trigger(Runtime.New(Result,{
-            $:0,
-            $0:_default
-           }));
-          }
-         else
-          {
-           msgs=_arg1.$0;
-           return trigger(Runtime.New(Result,{
-            $:1,
-            $0:msgs
-           }));
-          }
-        }),value,submitter)));
+         return _arg1.$==0?trigger(Runtime.New(Result,{
+          $:0,
+          $0:_default
+         })):trigger(Runtime.New(Result,{
+          $:1,
+          $0:_arg1.$0
+         }));
+        });
+        r.submitStream=submitter;
         return r;
        }
       })
@@ -1233,23 +904,27 @@
       op_LessMultiplyGreater:function(f,x)
       {
        var f1,g;
+       f1=f.view;
+       g=x.view;
        return Runtime.New(Piglet,{
         stream:Stream11.Ap(f.stream,x.stream),
-        view:(f1=f.view,(g=x.view,function(x1)
+        view:function(x1)
         {
          return g(f1(x1));
-        }))
+        }
        });
       },
       op_LessMultiplyQmarkGreater:function(f,x)
       {
        var f1,g;
+       f1=f.view;
+       g=x.view;
        return Runtime.New(Piglet,{
         stream:Stream11.ApJoin(f.stream,x.stream),
-        view:(f1=f.view,(g=x.view,function(x1)
+        view:function(x1)
         {
          return g(f1(x1));
-        }))
+        }
        });
       }
      },
@@ -1308,59 +983,40 @@
       },
       Confirm:function(init,validate,nomatch)
       {
-       var second,x,x1,x2,f,pred,msg,arg10,f1,_arg00_,f2;
+       var second,_arg20_,x;
        second=Piglet1.Yield(init);
-       x=(x1=(x2=Pervasives.op_LessMultiplyGreater(Pervasives.op_LessMultiplyGreater(Piglet1.Return(function(a)
+       _arg20_=Pervasives.op_LessMultiplyGreater(Pervasives.op_LessMultiplyGreater(Piglet1.Return(function(a)
        {
         return function(b)
         {
          return[a,b];
         };
-       }),validate(Piglet1.Yield(init))),second),(f=(pred=Runtime.Tupled(function(tupledArg)
+       }),validate(Piglet1.Yield(init))),second);
+       x=Validation["Is'"](Runtime.Tupled(function(tupledArg)
        {
-        var a,b;
-        a=tupledArg[0];
-        b=tupledArg[1];
-        return Unchecked.Equals(a,b);
-       }),(msg=(arg10=second.get_Stream(),ErrorMessage.Create(nomatch,arg10)),function(_arg20_)
+        return Unchecked.Equals(tupledArg[0],tupledArg[1]);
+       }),ErrorMessage.Create(nomatch,second.get_Stream()),_arg20_);
+       return Piglet1.MapViewArgs(function(a)
        {
-        return Validation["Is'"](pred,msg,_arg20_);
-       })),f(x2))),(f1=(_arg00_=Runtime.Tupled(function(tuple)
+        return function(b)
+        {
+         return[a,b];
+        };
+       },Piglet1.Map(Runtime.Tupled(function(tuple)
        {
         return tuple[0];
-       }),function(_arg10_)
-       {
-        return Piglet1.Map(_arg00_,_arg10_);
-       }),f1(x1)));
-       f2=function(_arg10_)
-       {
-        return Piglet1.MapViewArgs(function(a)
-        {
-         return function(b)
-         {
-          return[a,b];
-         };
-        },_arg10_);
-       };
-       return f2(x);
+       }),x));
       },
       FlushErrors:function(p)
       {
        return Piglet1.MapResult(function(_arg1)
        {
-        if(_arg1.$==1)
-         {
-          return Runtime.New(Result,{
-           $:1,
-           $0:Runtime.New(T,{
-            $:0
-           })
-          });
-         }
-        else
-         {
-          return _arg1;
-         }
+        return _arg1.$==1?Runtime.New(Result,{
+         $:1,
+         $0:Runtime.New(T,{
+          $:0
+         })
+        }):_arg1;
        },p);
       },
       Many:function(init,p)
@@ -1369,15 +1025,14 @@
       },
       ManyInit:function(inits,init,p)
       {
-       var s,_init,m;
+       var s,m;
        s=Stream1.New(Runtime.New(Result,{
         $:0,
         $0:inits
        }),{
         $:0
        });
-       _init=p(init);
-       m=UnitStream.New(p,s,_init,init);
+       m=UnitStream.New(p,s,p(init),init);
        return Runtime.New(Piglet,{
         stream:s,
         view:function(f)
@@ -1406,76 +1061,48 @@
       },
       Map:function(m,p)
       {
-       var f,_arg00_;
-       f=(_arg00_=function(_arg1)
+       return Piglet1.MapResult(function(_arg1)
        {
-        var x,msg;
-        if(_arg1.$==0)
-         {
-          x=_arg1.$0;
-          return Runtime.New(Result,{
-           $:0,
-           $0:m(x)
-          });
-         }
-        else
-         {
-          msg=_arg1.$0;
-          return Runtime.New(Result,{
-           $:1,
-           $0:msg
-          });
-         }
-       },function(_arg10_)
-       {
-        return Piglet1.MapResult(_arg00_,_arg10_);
-       });
-       return f(p);
+        return _arg1.$==0?Runtime.New(Result,{
+         $:0,
+         $0:m(_arg1.$0)
+        }):Runtime.New(Result,{
+         $:1,
+         $0:_arg1.$0
+        });
+       },p);
       },
       MapAsync:function(m,p)
       {
-       var f,_arg00_;
-       f=(_arg00_=function(_arg1)
+       return Piglet1.MapAsyncResult(function(_arg1)
        {
-        var x,f1,msg,x3;
+        var x;
         if(_arg1.$==0)
          {
           x=_arg1.$0;
-          f1=function()
+          return Concurrency.Delay(function()
           {
-           var x1,f2;
-           x1=m(x);
-           f2=function(_arg2)
+           return Concurrency.Bind(m(x),function(_arg2)
            {
-            var x2;
-            x2=Runtime.New(Result,{
+            return Concurrency.Return(Runtime.New(Result,{
              $:0,
              $0:_arg2
-            });
-            return Concurrency.Return(x2);
-           };
-           return Concurrency.Bind(x1,f2);
-          };
-          return Concurrency.Delay(f1);
+            }));
+           });
+          });
          }
         else
          {
-          msg=_arg1.$0;
-          x3=Runtime.New(Result,{
+          return Concurrency.Return(Runtime.New(Result,{
            $:1,
-           $0:msg
-          });
-          return Concurrency.Return(x3);
+           $0:_arg1.$0
+          }));
          }
-       },function(_arg10_)
-       {
-        return Piglet1.MapAsyncResult(_arg00_,_arg10_);
-       });
-       return f(p);
+       },p);
       },
       MapAsyncResult:function(m,p)
       {
-       var out,value,arg001,clo11,t1;
+       var out;
        out=Stream1.New(Runtime.New(Result,{
         $:1,
         $0:Runtime.New(T,{
@@ -1484,43 +1111,23 @@
        }),{
         $:0
        });
-       value=p.stream.Subscribe(function(v)
+       p.stream.Subscribe(function(v)
        {
-        var arg00,clo1,t;
-        arg00=Concurrency.Delay((clo1=function()
+        return Concurrency.Start(Concurrency.Delay(function()
         {
-         var x,f;
-         x=m(v);
-         f=function(_arg1)
+         return Concurrency.Bind(m(v),function(_arg1)
          {
-          var x1;
-          x1=out.Trigger(_arg1);
-          return Concurrency.Return(x1);
-         };
-         return Concurrency.Bind(x,f);
-        },clo1));
-        t={
-         $:0
-        };
-        return Concurrency.Start(arg00);
+          return Concurrency.Return(out.Trigger(_arg1));
+         });
+        }));
        });
-       value;
-       arg001=Concurrency.Delay((clo11=function()
+       Concurrency.Start(Concurrency.Delay(function()
        {
-        var x,f;
-        x=m(p.stream.get_Latest());
-        f=function(_arg2)
+        return Concurrency.Bind(m(p.stream.get_Latest()),function(_arg2)
         {
-         var x1;
-         x1=out.Trigger(_arg2);
-         return Concurrency.Return(x1);
-        };
-        return Concurrency.Bind(x,f);
-       },clo11));
-       t1={
-        $:0
-       };
-       Concurrency.Start(arg001);
+         return Concurrency.Return(out.Trigger(_arg2));
+        });
+       }));
        return Runtime.New(Piglet,{
         stream:out,
         view:p.view
@@ -1528,83 +1135,89 @@
       },
       MapResult:function(m,p)
       {
-       var out,value;
+       var out;
        out=Stream1.New(m(p.stream.get_Latest()),{
         $:0
        });
-       value=p.stream.Subscribe(function(x)
+       p.stream.Subscribe(function(x)
        {
-        var arg00;
-        arg00=m(x);
-        return out.Trigger(arg00);
+        return out.Trigger(m(x));
        });
-       value;
        return Runtime.New(Piglet,{
         stream:out,
         view:p.view
        });
       },
+      MapResultWithWriter:function(f,p)
+      {
+       var stream;
+       stream=Stream1.New(Runtime.New(Result,{
+        $:1,
+        $0:Runtime.New(T,{
+         $:0
+        })
+       }),{
+        $:0
+       });
+       p.stream.SubscribeImmediate(f(stream));
+       return Runtime.New(Piglet,{
+        stream:stream,
+        view:p.view
+       });
+      },
       MapToAsyncResult:function(m,p)
       {
-       var f,_arg00_;
-       f=(_arg00_=function(_arg1)
+       return Piglet1.MapAsyncResult(function(_arg1)
        {
-        var x,msg,x1;
-        if(_arg1.$==0)
-         {
-          x=_arg1.$0;
-          return m(x);
-         }
-        else
-         {
-          msg=_arg1.$0;
-          x1=Runtime.New(Result,{
-           $:1,
-           $0:msg
-          });
-          return Concurrency.Return(x1);
-         }
-       },function(_arg10_)
-       {
-        return Piglet1.MapAsyncResult(_arg00_,_arg10_);
-       });
-       return f(p);
+        return _arg1.$==0?m(_arg1.$0):Concurrency.Return(Runtime.New(Result,{
+         $:1,
+         $0:_arg1.$0
+        }));
+       },p);
       },
       MapToResult:function(m,p)
       {
-       var f,_arg00_;
-       f=(_arg00_=function(_arg1)
+       return Piglet1.MapResult(function(_arg1)
        {
-        var x,msg;
-        if(_arg1.$==0)
-         {
-          x=_arg1.$0;
-          return m(x);
-         }
-        else
-         {
-          msg=_arg1.$0;
-          return Runtime.New(Result,{
-           $:1,
-           $0:msg
-          });
-         }
-       },function(_arg10_)
-       {
-        return Piglet1.MapResult(_arg00_,_arg10_);
-       });
-       return f(p);
+        return _arg1.$==0?m(_arg1.$0):Runtime.New(Result,{
+         $:1,
+         $0:_arg1.$0
+        });
+       },p);
       },
       MapViewArgs:function(view,p)
       {
        var _arg00_;
+       _arg00_=p.view;
        return Runtime.New(Piglet,{
         stream:p.stream,
-        view:(_arg00_=p.view,function(_arg20_)
+        view:function(_arg20_)
         {
          return _arg20_(_arg00_(view));
-        })
+        }
        });
+      },
+      MapWithWriter:function(f,p)
+      {
+       return Piglet1.MapResultWithWriter(function(out)
+       {
+        return function(r)
+        {
+         var x;
+         if(r.$==0)
+          {
+           x=r.$0;
+           return(f(out))(x);
+          }
+         else
+          {
+           return out.Trigger(Runtime.New(Result,{
+            $:1,
+            $0:r.$0
+           }));
+          }
+        };
+       },p);
       },
       Render:function(view,p)
       {
@@ -1648,116 +1261,108 @@
       },
       RunResult:function(action,p)
       {
-       var value;
-       value=p.stream.Subscribe(action);
-       value;
+       p.stream.Subscribe(action);
        return p;
       },
       TransmitReader:function(p)
       {
        var v,a;
+       v=p.view;
+       a=p.stream;
        return Runtime.New(Piglet,{
         stream:p.stream,
-        view:(v=p.view,(a=p.stream,function(x)
+        view:function(x)
         {
          return(v(x))(a);
-        }))
+        }
        });
       },
       TransmitReaderMap:function(f,p)
       {
-       var v,a,arg10;
+       var v,a;
+       v=p.view;
+       a=Reader.Map(f,p.stream);
        return Runtime.New(Piglet,{
         stream:p.stream,
-        view:(v=p.view,(a=(arg10=p.stream,Reader.Map(f,arg10)),function(x)
+        view:function(x)
         {
          return(v(x))(a);
-        }))
+        }
        });
       },
       TransmitReaderMapResult:function(f,p)
       {
-       var v,a,arg10;
+       var v,a;
+       v=p.view;
+       a=Reader.MapResult(f,p.stream);
        return Runtime.New(Piglet,{
         stream:p.stream,
-        view:(v=p.view,(a=(arg10=p.stream,Reader.MapResult(f,arg10)),function(x)
+        view:function(x)
         {
          return(v(x))(a);
-        }))
+        }
        });
       },
       TransmitReaderMapToResult:function(f,p)
       {
-       var v,a,arg10;
+       var v,a;
+       v=p.view;
+       a=Reader.MapToResult(f,p.stream);
        return Runtime.New(Piglet,{
         stream:p.stream,
-        view:(v=p.view,(a=(arg10=p.stream,Reader.MapToResult(f,arg10)),function(x)
+        view:function(x)
         {
          return(v(x))(a);
-        }))
+        }
        });
       },
       TransmitStream:function(p)
       {
        var v,a;
+       v=p.view;
+       a=p.stream;
        return Runtime.New(Piglet,{
         stream:p.stream,
-        view:(v=p.view,(a=p.stream,function(x)
+        view:function(x)
         {
          return(v(x))(a);
-        }))
+        }
        });
       },
       TransmitWriter:function(p)
       {
        var v,a;
+       v=p.view;
+       a=p.stream;
        return Runtime.New(Piglet,{
         stream:p.stream,
-        view:(v=p.view,(a=p.stream,function(x)
+        view:function(x)
         {
          return(v(x))(a);
-        }))
+        }
        });
       },
       Validation:{
        Is:function(pred,msg,p)
        {
-        var _s_,value;
+        var _s_;
         _s_=Stream1.New(p.stream.get_Latest(),{
          $:1,
          $0:p.stream.get_Id()
         });
-        value=p.stream.Subscribe(function(_arg1)
+        p.stream.Subscribe(function(_arg1)
         {
-         var x,m;
-         if(_arg1.$==0)
-          {
-           if(pred(_arg1.$0))
-            {
-             x=_arg1.$0;
-             return _s_.Trigger(Runtime.New(Result,{
-              $:0,
-              $0:x
-             }));
-            }
-           else
-            {
-             return _s_.Trigger(Runtime.New(Result,{
-              $:1,
-              $0:List.ofArray([ErrorMessage.New(msg,_s_.get_Id())])
-             }));
-            }
-          }
-         else
-          {
-           m=_arg1.$0;
-           return _s_.Trigger(Runtime.New(Result,{
-            $:1,
-            $0:m
-           }));
-          }
+         return _arg1.$==0?pred(_arg1.$0)?_s_.Trigger(Runtime.New(Result,{
+          $:0,
+          $0:_arg1.$0
+         })):_s_.Trigger(Runtime.New(Result,{
+          $:1,
+          $0:List.ofArray([ErrorMessage.New(msg,_s_.get_Id())])
+         })):_s_.Trigger(Runtime.New(Result,{
+          $:1,
+          $0:_arg1.$0
+         }));
         });
-        value;
         return Runtime.New(Piglet,{
          stream:_s_,
          view:p.view
@@ -1765,42 +1370,24 @@
        },
        "Is'":function(pred,msg,p)
        {
-        var _s_,value;
+        var _s_;
         _s_=Stream1.New(p.stream.get_Latest(),{
          $:1,
          $0:p.stream.get_Id()
         });
-        value=p.stream.Subscribe(function(_arg1)
+        p.stream.Subscribe(function(_arg1)
         {
-         var x,m;
-         if(_arg1.$==0)
-          {
-           if(pred(_arg1.$0))
-            {
-             x=_arg1.$0;
-             return _s_.Trigger(Runtime.New(Result,{
-              $:0,
-              $0:x
-             }));
-            }
-           else
-            {
-             return _s_.Trigger(Runtime.New(Result,{
-              $:1,
-              $0:List.ofArray([msg])
-             }));
-            }
-          }
-         else
-          {
-           m=_arg1.$0;
-           return _s_.Trigger(Runtime.New(Result,{
-            $:1,
-            $0:m
-           }));
-          }
+         return _arg1.$==0?pred(_arg1.$0)?_s_.Trigger(Runtime.New(Result,{
+          $:0,
+          $0:_arg1.$0
+         })):_s_.Trigger(Runtime.New(Result,{
+          $:1,
+          $0:List.ofArray([msg])
+         })):_s_.Trigger(Runtime.New(Result,{
+          $:1,
+          $0:_arg1.$0
+         }));
         });
-        value;
         return Runtime.New(Piglet,{
          stream:_s_,
          view:p.view
@@ -1824,24 +1411,26 @@
       {
        var submitter,v;
        submitter=Submitter.New(pin.stream,false);
+       v=pin.view;
        return Runtime.New(Piglet,{
         stream:submitter.get_Output(),
-        view:(v=pin.view,function(x)
+        view:function(x)
         {
          return(v(x))(submitter);
-        })
+        }
        });
       },
       WithSubmitClearError:function(pin)
       {
        var submitter,v;
        submitter=Submitter.New(pin.stream,true);
+       v=pin.view;
        return Runtime.New(Piglet,{
         stream:submitter.get_Output(),
-        view:(v=pin.view,function(x)
+        view:function(x)
         {
          return(v(x))(submitter);
-        })
+        }
        });
       },
       Yield:function(x)
@@ -1882,43 +1471,24 @@
       },
       YieldOption:function(x,none)
       {
-       var x1,f,_arg00_,_arg10_;
-       x1=Piglet1.Yield(x);
-       f=(_arg00_=(_arg10_=function(x2)
+       var _arg00_,_arg10_;
+       _arg00_=function(_arg1)
        {
-        if(Unchecked.Equals(x2,none))
-         {
-          return{
-           $:0
-          };
-         }
-        else
-         {
-          return{
-           $:1,
-           $0:x2
-          };
-         }
-       },function(_arg20_)
+        return _arg1.$==1?_arg1.$0:none;
+       };
+       _arg10_=function(x1)
        {
-        return Stream11.Map(function(_arg1)
-        {
-         var s;
-         if(_arg1.$==1)
-          {
-           s=_arg1.$0;
-           return s;
-          }
-         else
-          {
-           return none;
-          }
-        },_arg10_,_arg20_);
-       }),function(_arg10_1)
+        return Unchecked.Equals(x1,none)?{
+         $:0
+        }:{
+         $:1,
+         $0:x1
+        };
+       };
+       return Piglet1.MapViewArgs(function(_arg20_)
        {
-        return Piglet1.MapViewArgs(_arg00_,_arg10_1);
-       });
-       return f(x1);
+        return Stream11.Map(_arg00_,_arg10_,_arg20_);
+       },Piglet1.Yield(x));
       }
      },
      Reader:Runtime.Class({
@@ -1929,55 +1499,33 @@
       },
       Through:function(r)
       {
-       var out,value,_this=this;
+       var out,_this=this;
        out=Stream1.New(this.get_Latest(),{
         $:0
        });
-       value=r.Subscribe(function(_arg1)
+       r.Subscribe(function(_arg1)
        {
-        var msgs,matchValue,f,predicate,_l_,l,l1;
+        var msgs,matchValue;
         if(_arg1.$==1)
          {
           msgs=_arg1.$0;
-          matchValue=[_this.get_Latest(),(f=(predicate=function(m)
+          matchValue=[_this.get_Latest(),List.filter(function(m)
           {
            return m.get_Source()===_this.get_Id();
-          },function(list)
-          {
-           return List.filter(predicate,list);
-          }),f(msgs))];
-          if(matchValue[1].$==0)
-           {
-            return out.Trigger(_this.get_Latest());
-           }
-          else
-           {
-            if(matchValue[0].$==1)
-             {
-              _l_=matchValue[1];
-              l=matchValue[0].$0;
-              return out.Trigger(Runtime.New(Result,{
-               $:1,
-               $0:List.append(l,_l_)
-              }));
-             }
-            else
-             {
-              matchValue[0].$0;
-              l1=matchValue[1];
-              return out.Trigger(Runtime.New(Result,{
-               $:1,
-               $0:l1
-              }));
-             }
-           }
+          },msgs)];
+          return matchValue[1].$==0?out.Trigger(_this.get_Latest()):matchValue[0].$==1?out.Trigger(Runtime.New(Result,{
+           $:1,
+           $0:List.append(matchValue[0].$0,matchValue[1])
+          })):out.Trigger(Runtime.New(Result,{
+           $:1,
+           $0:matchValue[1]
+          }));
          }
         else
          {
           return out.Trigger(_this.get_Latest());
          }
        });
-       value;
        return out;
       },
       get_Id:function()
@@ -1994,51 +1542,40 @@
       },
       Map2:function(f,rb,rc)
       {
-       return function(arg20)
+       return Reader.MapResult2(function(b)
        {
-        return Reader.MapResult2(function(b)
+        return function(c)
         {
-         return function(c)
-         {
-          return function(arg201)
-          {
-           return Result.Map2(f,b,arg201);
-          }(c);
-         };
-        },rb,arg20);
-       }(rc);
+         return Result.Map2(f,b,c);
+        };
+       },rb,rc);
       },
       MapResult:function(f,r)
       {
-       var out,value;
+       var out;
        out=Stream1.New(f(r.get_Latest()),{
         $:0
        });
-       value=r.Subscribe(function(x)
+       r.Subscribe(function(x)
        {
-        var arg00;
-        arg00=f(x);
-        return out.Trigger(arg00);
+        return out.Trigger(f(x));
        });
-       value;
        return out;
       },
       MapResult2:function(f,rb,rc)
       {
-       var out,value,value1;
+       var out;
        out=Stream1.New((f(rb.get_Latest()))(rc.get_Latest()),{
         $:0
        });
-       value=rb.Subscribe(function(b)
+       rb.Subscribe(function(b)
        {
         return out.Trigger((f(b))(rc.get_Latest()));
        });
-       value;
-       value1=rc.Subscribe(function(c)
+       rc.Subscribe(function(c)
        {
         return out.Trigger((f(rb.get_Latest()))(c));
        });
-       value1;
        return out;
       },
       MapToResult:function(f,r)
@@ -2056,78 +1593,35 @@
      Result:Runtime.Class({
       get_isSuccess:function()
       {
-       if(this.$==1)
-        {
-         return false;
-        }
-       else
-        {
-         return true;
-        }
+       return this.$==1?false:true;
       }
      },{
       Ap:function(r1,r2)
       {
-       var matchValue,m1,m2,m,m3,f,x;
+       var matchValue;
        matchValue=[r1,r2];
-       if(matchValue[0].$==1)
-        {
-         if(matchValue[1].$==1)
-          {
-           m1=matchValue[0].$0;
-           m2=matchValue[1].$0;
-           return Runtime.New(Result,{
-            $:1,
-            $0:List.append(m1,m2)
-           });
-          }
-         else
-          {
-           m=matchValue[0].$0;
-           return Runtime.New(Result,{
-            $:1,
-            $0:m
-           });
-          }
-        }
-       else
-        {
-         if(matchValue[1].$==1)
-          {
-           m3=matchValue[1].$0;
-           return Runtime.New(Result,{
-            $:1,
-            $0:m3
-           });
-          }
-         else
-          {
-           f=matchValue[0].$0;
-           x=matchValue[1].$0;
-           return Runtime.New(Result,{
-            $:0,
-            $0:f(x)
-           });
-          }
-        }
+       return matchValue[0].$==1?matchValue[1].$==1?Runtime.New(Result,{
+        $:1,
+        $0:List.append(matchValue[0].$0,matchValue[1].$0)
+       }):Runtime.New(Result,{
+        $:1,
+        $0:matchValue[0].$0
+       }):matchValue[1].$==1?Runtime.New(Result,{
+        $:1,
+        $0:matchValue[1].$0
+       }):Runtime.New(Result,{
+        $:0,
+        $0:matchValue[0].$0.call(null,matchValue[1].$0)
+       });
       },
       Bind:function(f)
       {
        return function(_arg2)
        {
-        var m;
-        if(_arg2.$==1)
-         {
-          m=_arg2.$0;
-          return Runtime.New(Result,{
-           $:1,
-           $0:m
-          });
-         }
-        else
-         {
-          return f(_arg2.$0);
-         }
+        return _arg2.$==1?Runtime.New(Result,{
+         $:1,
+         $0:_arg2.$0
+        }):f(_arg2.$0);
        };
       },
       Failwith:function(msg)
@@ -2141,108 +1635,61 @@
       {
        return function(_arg1)
        {
-        if(_arg1.$==1)
-         {
-          return null;
-         }
-        else
-         {
-          return f(_arg1.$0);
-         }
+        return _arg1.$==1?null:f(_arg1.$0);
        };
       },
       Join:function(r)
       {
-       var x,m,m1;
-       if(r.$==0)
-        {
-         if(r.$0.$==0)
-          {
-           x=r.$0.$0;
-           return Runtime.New(Result,{
-            $:0,
-            $0:x
-           });
-          }
-         else
-          {
-           m=r.$0.$0;
-           return Runtime.New(Result,{
-            $:1,
-            $0:m
-           });
-          }
-        }
-       else
-        {
-         m1=r.$0;
-         return Runtime.New(Result,{
-          $:1,
-          $0:m1
-         });
-        }
+       return r.$==0?r.$0.$==0?Runtime.New(Result,{
+        $:0,
+        $0:r.$0.$0
+       }):Runtime.New(Result,{
+        $:1,
+        $0:r.$0.$0
+       }):Runtime.New(Result,{
+        $:1,
+        $0:r.$0
+       });
       },
       Map:function(f,ra)
       {
-       var m,x;
-       if(ra.$==1)
-        {
-         m=ra.$0;
-         return Runtime.New(Result,{
-          $:1,
-          $0:m
-         });
-        }
-       else
-        {
-         x=ra.$0;
-         return Runtime.New(Result,{
-          $:0,
-          $0:f(x)
-         });
-        }
+       return ra.$==1?Runtime.New(Result,{
+        $:1,
+        $0:ra.$0
+       }):Runtime.New(Result,{
+        $:0,
+        $0:f(ra.$0)
+       });
       },
       Map2:function(f,ra,rb)
       {
-       var matchValue,ma,mb,m,m1,a,b;
+       var matchValue,b;
        matchValue=[ra,rb];
        if(matchValue[0].$==1)
         {
-         if(matchValue[1].$==1)
-          {
-           ma=matchValue[0].$0;
-           mb=matchValue[1].$0;
-           return Runtime.New(Result,{
-            $:1,
-            $0:List.append(ma,mb)
-           });
-          }
-         else
-          {
-           m=matchValue[0].$0;
-           return Runtime.New(Result,{
-            $:1,
-            $0:m
-           });
-          }
+         return matchValue[1].$==1?Runtime.New(Result,{
+          $:1,
+          $0:List.append(matchValue[0].$0,matchValue[1].$0)
+         }):Runtime.New(Result,{
+          $:1,
+          $0:matchValue[0].$0
+         });
         }
        else
         {
          if(matchValue[1].$==1)
           {
-           m1=matchValue[1].$0;
            return Runtime.New(Result,{
             $:1,
-            $0:m1
+            $0:matchValue[1].$0
            });
           }
          else
           {
-           a=matchValue[0].$0;
            b=matchValue[1].$0;
            return Runtime.New(Result,{
             $:0,
-            $0:(f(a))(b)
+            $0:(f(matchValue[0].$0))(b)
            });
           }
         }
@@ -2266,22 +1713,13 @@
        var _this=this;
        return ConcreteWriter.New1(function(_arg1)
        {
-        var m;
-        if(_arg1.$==0)
-         {
-          return _this.Trigger(Runtime.New(Result,{
-           $:0,
-           $0:x
-          }));
-         }
-        else
-         {
-          m=_arg1.$0;
-          return _this.Trigger(Runtime.New(Result,{
-           $:1,
-           $0:m
-          }));
-         }
+        return _arg1.$==0?_this.Trigger(Runtime.New(Result,{
+         $:0,
+         $0:x
+        })):_this.Trigger(Runtime.New(Result,{
+         $:1,
+         $0:_arg1.$0
+        }));
        });
       },
       get_Latest:function()
@@ -2291,8 +1729,8 @@
      },{
       New:function(init,id)
       {
-       var r,id1;
-       r=Runtime.New(this,Reader.New(id.$==0?(Id.next())(null):(id1=id.$0,id1)));
+       var r;
+       r=Runtime.New(this,Reader.New(id.$==0?(Id.next())(null):id.$0));
        r.s=HotStream.New(init);
        return r;
       }
@@ -2300,44 +1738,40 @@
      Stream1:{
       Ap:function(sf,sx)
       {
-       var out,value,value1;
+       var out;
        out=Stream1.New(Result.Ap(sf.get_Latest(),sx.get_Latest()),{
         $:0
        });
-       value=sf.Subscribe(function(f)
+       sf.Subscribe(function(f)
        {
         return out.Trigger(Result.Ap(f,sx.get_Latest()));
        });
-       value;
-       value1=sx.Subscribe(function(x)
+       sx.Subscribe(function(x)
        {
         return out.Trigger(Result.Ap(sf.get_Latest(),x));
        });
-       value1;
        return out;
       },
       ApJoin:function(sf,sx)
       {
-       var out,value,value1;
+       var out;
        out=Stream1.New(Result.Ap(sf.get_Latest(),Result.Join(sx.get_Latest())),{
         $:0
        });
-       value=sf.Subscribe(function(f)
+       sf.Subscribe(function(f)
        {
         return out.Trigger(Result.Ap(f,Result.Join(sx.get_Latest())));
        });
-       value;
-       value1=sx.Subscribe(function(x)
+       sx.Subscribe(function(x)
        {
         return out.Trigger(Result.Ap(sf.get_Latest(),Result.Join(x)));
        });
-       value1;
        return out;
       },
       Map:function(a2b,b2a,s)
       {
-       var _s_,arg10,pa,pb,value,value1;
-       _s_=Stream1.New((arg10=s.get_Latest(),Result.Map(a2b,arg10)),{
+       var _s_,pa,pb;
+       _s_=Stream1.New(Result.Map(a2b,s.get_Latest()),{
         $:1,
         $0:s.get_Id()
        });
@@ -2347,7 +1781,7 @@
        pb={
         contents:_s_.get_Latest()
        };
-       value=s.Subscribe(function(a)
+       s.Subscribe(function(a)
        {
         if(pa.contents!==a)
          {
@@ -2359,8 +1793,7 @@
           return null;
          }
        });
-       value;
-       value1=_s_.Subscribe(function(b)
+       _s_.Subscribe(function(b)
        {
         if(pb.contents!==b)
          {
@@ -2372,7 +1805,6 @@
           return null;
          }
        });
-       value1;
        return _s_;
       }
      },
@@ -2407,7 +1839,7 @@
      },{
       New:function(input,clearError)
       {
-       var r,value;
+       var r;
        r=Runtime.New(this,Reader.New((Id.next())(null)));
        r.input=input;
        r.output=Stream1.New(Runtime.New(Result,{
@@ -2420,51 +1852,25 @@
        });
        r.writer=ConcreteWriter.New1(function(unitIn)
        {
-        var matchValue,x,m,m1,m11,m2;
+        var matchValue;
         matchValue=[unitIn,r.input.get_Latest()];
-        if(matchValue[0].$==0)
-         {
-          if(matchValue[1].$==0)
-           {
-            x=matchValue[1].$0;
-            return r.output.Trigger(Runtime.New(Result,{
-             $:0,
-             $0:x
-            }));
-           }
-          else
-           {
-            m=matchValue[1].$0;
-            return r.output.Trigger(Runtime.New(Result,{
-             $:1,
-             $0:m
-            }));
-           }
-         }
-        else
-         {
-          if(matchValue[1].$==0)
-           {
-            m1=matchValue[0].$0;
-            return r.output.Trigger(Runtime.New(Result,{
-             $:1,
-             $0:m1
-            }));
-           }
-          else
-           {
-            m11=matchValue[0].$0;
-            m2=matchValue[1].$0;
-            return r.output.Trigger(Runtime.New(Result,{
-             $:1,
-             $0:List.append(m11,m2)
-            }));
-           }
-         }
+        return matchValue[0].$==0?matchValue[1].$==0?r.output.Trigger(Runtime.New(Result,{
+         $:0,
+         $0:matchValue[1].$0
+        })):r.output.Trigger(Runtime.New(Result,{
+         $:1,
+         $0:matchValue[1].$0
+        })):matchValue[1].$==0?r.output.Trigger(Runtime.New(Result,{
+         $:1,
+         $0:matchValue[0].$0
+        })):r.output.Trigger(Runtime.New(Result,{
+         $:1,
+         $0:List.append(matchValue[0].$0,matchValue[1].$0)
+        }));
        });
        if(clearError)
         {
-         value=r.input.Subscribe(function()
+         r.input.Subscribe(function()
          {
           return r.output.Trigger(Runtime.New(Result,{
            $:1,
@@ -2473,7 +1879,6 @@
            })
           }));
          });
-         value;
         }
        return r;
       }
@@ -2540,5 +1945,6 @@
   Runtime.Inherit(Submitter,Reader);
   Id.next();
   Controls.nextId();
+  return;
  });
 }());

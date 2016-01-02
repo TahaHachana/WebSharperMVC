@@ -1,6 +1,6 @@
 (function()
 {
- var Global=this,Runtime=this.IntelliFactory.Runtime,WebSharper,Piglets,Piglet1,Sitelet,Login,Client,Concurrency,Remoting,window,alert,LoginInfo,Pervasives,Validation,Html,Operators,Default,List,Controls,HTML5,jQuery,EventsPervasives;
+ var Global=this,Runtime=this.IntelliFactory.Runtime,WebSharper,Piglets,Piglet1,Sitelet,Login,Client,Concurrency,JavaScript,Remoting,window,alert,LoginInfo,Pervasives,Validation,Html,Operators,Default,List,Controls,HTML5,jQuery,EventsPervasives;
  Runtime.Define(Global,{
   Sitelet:{
    Login:{
@@ -20,6 +20,7 @@
       {
        return Concurrency.Start(Concurrency.Delay(function()
        {
+        JavaScript.Log(loginInfo);
         return Concurrency.Bind(Remoting.Async("Sitelet:0",[loginInfo]),function(_arg1)
         {
          if(_arg1.$==1)
@@ -50,10 +51,7 @@
       }),Validation.Is(function(value)
       {
        return Validation.NotEmpty(value);
-      },"Please enter your username.",Piglet1.Yield(init.Username))),Validation.Is(function(value)
-      {
-       return Validation.NotEmpty(value);
-      },"Please enter your password.",Piglet1.Yield(init.Password))));
+      },"Please enter your username.",Piglet1.Yield(init.Username))),Piglet1.Yield(init.Password)));
      },
      loginRender:function(name,password,submit)
      {
@@ -79,7 +77,7 @@
       },function(x)
       {
        return x;
-      },name),List.ofArray([Default.Attr().Class("form-control"),Default.Attr().NewAttr("type","text"),HTML5.Attr().NewAttr("autofocus","autofocus"),HTML5.Attr().NewAttr("required","required"),HTML5.Attr().NewAttr("placeholder","Username")]))])),Operators.add(Default.Div(List.ofArray([Default.Attr().Class("form-group")])),List.ofArray([x1])),Operators.add(Controls.SubmitValidate(submit),List.ofArray([Default.Attr().Class("btn btn-primary"),Default.Attr().NewAttr("id","submit-btn")]))]));
+      },name),List.ofArray([Default.Attr().Class("form-control"),Default.Attr().NewAttr("type","text"),HTML5.Attr().NewAttr("autofocus","autofocus"),HTML5.Attr().NewAttr("required","required"),HTML5.Attr().NewAttr("placeholder","Username"),Default.Attr().NewAttr("id","name")]))])),Operators.add(Default.Div(List.ofArray([Default.Attr().Class("form-group")])),List.ofArray([x1])),Operators.add(Controls.SubmitValidate(submit),List.ofArray([Default.Attr().Class("btn btn-primary"),Default.Attr().NewAttr("id","submit-btn")]))]));
      }
     },
     Control:Runtime.Class({
@@ -109,6 +107,7 @@
   Login=Runtime.Safe(Sitelet.Login);
   Client=Runtime.Safe(Login.Client);
   Concurrency=Runtime.Safe(WebSharper.Concurrency);
+  JavaScript=Runtime.Safe(WebSharper.JavaScript);
   Remoting=Runtime.Safe(WebSharper.Remoting);
   window=Runtime.Safe(Global.window);
   alert=Runtime.Safe(Global.alert);

@@ -54,7 +54,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="robots.txt" />
-    <Content Include="Scripts\*.*" />
     <Content Include="Scripts\WebSharper\IntelliFactory.Formlet.d.ts" />
     <Content Include="Scripts\WebSharper\IntelliFactory.Formlet.js" />
     <Content Include="Scripts\WebSharper\IntelliFactory.Formlet.min.js" />
